@@ -1,0 +1,92 @@
+<resources>
+    <string name="app_name" translatable="false">appalta</string>
+
+    <!--Activity -->
+    <string name="title_activity_init">Inizializzazione</string>
+    <string name="init">Inizializzazione in corso..</string>
+    <!--Activity Mappa -->
+    <string name="title_activity_maps">Mappa</string>
+    <string name="action_refresh">Scarica Dati</string>
+    <string name="action_view">Visualizza Appalti</string>
+    <string name="action_delete">Elimina Markers</string>
+    <string name="action_list">Visualizza la lista di Appalti</string>
+    <string name="action_list_company">Visualizza la lista di Aziende</string>
+    <string name="searh_location">Cerca</string>
+    <string name="confirm">Conferma</string>
+    <string name="cancel">Annulla</string>
+    <string name="confirm2">Sei Sicuro?</string>
+    <string name="action_optionsettings">Opzioni</string>
+    <string name="yes">Si</string>
+    <string name="no">No</string>
+    <string name="markers_multiple">Ci sono appalti in questa città</string>
+    <string name="action_info">Info</string>
+
+    <!--Menu -->
+    <string name="title_activity_menu">Menu</string>
+    <string name="action_settings">Opzioni</string>
+
+    <!--Activity Menu -->
+    <string name="map_selection">Seleziona Tipo di Mappa:</string>
+    <string name="null_data">Nessun dato inserito</string>
+    <string name="element_selection">Appalto Selezionato</string>
+    <string name="marker_selection">Seleziona Quanti Marker Visualizzare (0 per vederli tutti):</string>
+    <string name="marker_selection_hint">Esempio: 10</string>
+
+    <!--Activity SelectedMarker -->
+    <string name="title_activity_selected_marker">Marker Selezionato</string>
+    <string name="selected_titolo">Titolo:</string>
+    <string name="selected_citta">Città:</string>
+    <string name="selected_tipo">Tipo di appalto:</string>
+    <string name="selected_anno">Anno atto autorizzativo:</string>
+    <string name="selected_cig">Cig:</string>
+    <string name="selected_durata">Durata:</string>
+    <string name="selected_aggiudicatario">Aggiudicatario:</string>
+    <string name="selected_data_inizio">Data di inizio:</string>
+    <string name="selected_codice_fiscale">Codice fiscale/Iva aggiudicatario:</string>
+    <string name="selected_importo">Importo di aggiudicazione:</string>
+    <string name="selected_importo2">Importo:</string>
+    <string name="selected_responsabile">Responsabile gara:</string>
+
+    <!-- Activity List-->
+    <string name="title_activity_list">Lista Appalti</string>
+    <string name="filter_citta">Filtra per città</string>
+    <string name="filter_titolo">Filtra per titolo</string>
+    <string name="filter_cig">Filtra per cig</string>
+    <string name="filter_type">Filtra per tipo</string>
+    <string name="filter_cod_iva">Filtra per codice fiscale/iva</string>
+    <string name="filter_delete">Elimina filtro</string>
+    <string name="filter_deleted">Filtro rimosso</string>
+    <string name="filter_search">Cerca negli appalti</string>
+    <string name="filter_null">Nessun filtro selezionato</string>
+    <string name="filter_list">Visualizza filtri attivi</string>
+
+    <string name="insert_citta">Inserisci una città da cercare</string>
+    <string name="insert_titolo">Inserisci una titolo da cercare</string>
+    <string name="insert_cig">Inserisci un cig</string>
+    <string name="insert_type">Inserisci un tipo di gara</string>
+    <string name="insert_cod_iva">Inserisci un codice fiscale/iva da cercare</string>
+    <string name="insert_search">Inserisci una stringa da cercare</string>
+    <string name="insert_null">Seleziona un filtro prima di procedere</string>
+
+    <!-- Activity CompanyList-->
+    <string name="title_activity_company_list">Lista Aziende</string>
+    <string name="selected_company">Azienda</string>
+    <string name="selected_id">Identificativo:</string>
+    <string name="filter_company">Filtra per azienda</string>
+    <string name="insert_company">Inserisci un\'azienda da cercare</string>
+
+    <!-- Activity CompanyList-->
+    <string name="title_activity_selected_company">Azienda Selezionata</string>
+
+    <!--Errori -->
+    <string name="error_connection">Errore, hai controllato la tua connessione?</string>
+    <string name="error_data">Errore. Dati Mancanti</string>
+
+    <!--Stringhe tipi mappe -->
+    <string name="MAP_TYPE_HYBRID">Ibrida</string>
+    <string name="MAP_TYPE_NORMAL">Normale</string>
+    <string name="MAP_TYPE_SATELLITE">Satellite</string>
+    <string name="MAP_TYPE_TERRAIN">Terreno</string>
+
+
+</resources>

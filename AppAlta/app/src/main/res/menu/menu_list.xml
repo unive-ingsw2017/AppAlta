@@ -1,0 +1,45 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.progetto.ingegneria.appalta.Activities.ListActivity">
+    <item
+        android:id="@+id/filter_city"
+        android:title="@string/filter_citta"
+        android:orderInCategory="1"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/filter_title"
+        android:title="@string/filter_titolo"
+        android:orderInCategory="2"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/filter_cig"
+        android:title="@string/filter_cig"
+        android:orderInCategory="3"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/filter_type"
+        android:title="@string/filter_type"
+        android:orderInCategory="4"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/filter_cod_iva"
+        android:title="@string/filter_cod_iva"
+        android:orderInCategory="5"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/filter_list"
+        android:title="@string/filter_list"
+        android:orderInCategory="99"
+        android:icon="@drawable/ic_action_list"
+        app:showAsAction="ifRoom|withText" />
+    <item
+        android:id="@+id/filter_delete"
+        android:title="@string/filter_delete"
+        android:icon="@drawable/ic_action_delete"
+        android:orderInCategory="100"
+        app:showAsAction="ifRoom|withText" />
+</menu>
