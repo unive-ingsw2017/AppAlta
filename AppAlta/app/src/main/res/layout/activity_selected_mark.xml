@@ -54,6 +54,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1.2"
                 android:text="@string/selected_titolo"
+                android:textColor="@color/primary"
                 android:textStyle="bold" />
 
             <TextView
@@ -79,6 +80,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1.2"
                 android:text="@string/selected_citta"
+                android:textColor="@color/primary"
                 android:textStyle="bold" />
 
             <TextView
@@ -104,6 +106,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1.2"
                 android:text="@string/selected_tipo"
+                android:textColor="@color/primary"
                 android:textStyle="bold" />
 
             <TextView
@@ -129,6 +132,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1.2"
                 android:text="@string/selected_anno"
+                android:textColor="@color/primary"
                 android:textStyle="bold" />
 
             <TextView
@@ -155,6 +159,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1.2"
                 android:text="@string/selected_aggiudicatario"
+                android:textColor="@color/primary"
                 android:textStyle="bold" />
 
             <TextView
@@ -179,6 +184,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1.2"
                 android:text="@string/selected_importo"
+                android:textColor="@color/primary"
                 android:textStyle="bold" />
 
             <TextView
@@ -204,6 +210,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1.2"
                 android:text="@string/selected_codice_fiscale"
+                android:textColor="@color/primary"
                 android:textStyle="bold" />
 
             <TextView
@@ -228,6 +235,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1.2"
                 android:text="@string/selected_data_inizio"
+                android:textColor="@color/primary"
                 android:textStyle="bold" />
 
             <TextView
@@ -255,6 +263,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1.2"
                 android:text="@string/selected_responsabile"
+                android:textColor="@color/primary"
                 android:textStyle="bold" />
 
             <TextView

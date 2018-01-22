@@ -5,22 +5,18 @@ import android.annotation.TargetApi;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.maps.android.clustering.ClusterManager;
-import com.progetto.ingegneria.appalta.Activities.SelectedItemActivity;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.progetto.ingegneria.appalta.Classes.Appalto;
-import com.progetto.ingegneria.appalta.Classes.CustomClusterRender;
 import com.progetto.ingegneria.appalta.Classes.JsonManager;
-import com.progetto.ingegneria.appalta.Classes.MyItem;
 import com.progetto.ingegneria.appalta.R;
 
 import org.json.JSONArray;
@@ -28,11 +24,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Random;
-
-import static java.lang.Math.cos;
-import static java.lang.Math.sin;
-import static java.lang.Math.sqrt;
 
 /**
  * Created by matteo on 04/10/2017.
@@ -48,7 +39,6 @@ public class DataLoader extends AsyncTask<String, String, Void> {
     private String search_string;
     private boolean search;
     private ArrayList<Appalto> trovati;
-    private ClusterManager<MyItem> mClusterManager ;
 
     public DataLoader(Context mainContext, Context appContext, GoogleMap googleMap, int nMarkers) {
         this.search = false;
@@ -57,7 +47,6 @@ public class DataLoader extends AsyncTask<String, String, Void> {
         this.nMarkers=nMarkers;
         this.appContext = appContext;
         this.mainContext = mainContext;
-        this.mClusterManager = new ClusterManager<>(mainContext, googleMap);
     }
 
     public DataLoader(Context mainContext, Context appContext, GoogleMap googleMap, int nMarkers, String search_string) {
@@ -68,7 +57,6 @@ public class DataLoader extends AsyncTask<String, String, Void> {
         this.nMarkers=nMarkers;
         this.appContext = appContext;
         this.mainContext = mainContext;
-        this.mClusterManager = new ClusterManager<>(mainContext, googleMap);
     }
 
 
@@ -170,27 +158,8 @@ public class DataLoader extends AsyncTask<String, String, Void> {
         try {
             int k=0; //contatore per i log
             ArrayList<Appalto> visualizza;
+            ArrayList<String> inseriti = new ArrayList<>();
             googleMap.clear();
-            mClusterManager.clearItems();
-            googleMap.setOnCameraChangeListener(mClusterManager);
-            googleMap.setOnMarkerClickListener(mClusterManager);
-            googleMap.setOnInfoWindowClickListener(mClusterManager);
-            mClusterManager.setRenderer(new CustomClusterRender(mainContext, googleMap, mClusterManager));
-            mClusterManager.setOnClusterItemInfoWindowClickListener(new ClusterManager.OnClusterItemInfoWindowClickListener<MyItem>() {
-                @Override
-                public void onClusterItemInfoWindowClick(MyItem myItem) {
-                    try {
-                        final Intent intent = new Intent(appContext, SelectedItemActivity.class);
-                        intent.putExtra("titolo", myItem.getTitolo());
-                        mainContext.startActivity(intent);
-                    }
-                    catch(Exception e){
-                        Log.e("MapsActivity onInfoWindowClick", e.getMessage());
-                        final Toast toast = Toast.makeText(appContext,R.string.error_data,Toast.LENGTH_LONG);
-                        toast.show();
-                    }
-                }
-            });
             if(!search) //se non ho cercato, visualizzo tutta la lista
                 visualizza = appalti;
             else    //altrimenti solo gli appalti trovati
@@ -198,14 +167,29 @@ public class DataLoader extends AsyncTask<String, String, Void> {
 
             for(int i=0; i<visualizza.size();i++){
                 try {
-                    LatLng pos = random_marker(5000, visualizza.get(i).getCoordinate().latitude, visualizza.get(i).getCoordinate().longitude);
+                    //LatLng pos = random_marker(5000, visualizza.get(i).getCoordinate().latitude, visualizza.get(i).getCoordinate().longitude);
                     String importo = visualizza.get(i).getImporto_aggiudicazione().replaceAll(",",".");
+                    String titolo="Ci sono appalti qui";
+                    if(!inseriti.contains(visualizza.get(i).getCitta()))
                     try{
-                        mClusterManager.addItem(new MyItem(pos, visualizza.get(i).getTitolo(), Double.parseDouble(importo)));
+                        if(search) {
+                            titolo = visualizza.get(i).getTitolo();
+
+                            if (Double.parseDouble(importo) < 15000)
+                                googleMap.addMarker(new MarkerOptions().position(visualizza.get(i).getCoordinate()).title(titolo).icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_low_cost)));
+                            else if (Double.parseDouble(importo) > 100000)
+                                googleMap.addMarker(new MarkerOptions().position(visualizza.get(i).getCoordinate()).title(titolo).icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_high_cost)));
+                            else
+                                googleMap.addMarker(new MarkerOptions().position(visualizza.get(i).getCoordinate()).title(titolo).icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_default)));
+                        }
+                        else
+                            googleMap.addMarker(new MarkerOptions().position(visualizza.get(i).getCoordinate()).title(titolo).icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_default)));
+
+                        inseriti.add(visualizza.get(i).getCitta());
                     }
                     catch (Exception e){
                         Log.e("DataLoader", e.getMessage());
-                        mClusterManager.addItem(new MyItem(pos, visualizza.get(i).getTitolo(), 0));    //se l'importo non è un numero, assegno a 0
+                        googleMap.addMarker(new MarkerOptions().position(visualizza.get(i).getCoordinate()).title(titolo).icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_default)));
                     }
                     k++;
                 }
@@ -214,7 +198,6 @@ public class DataLoader extends AsyncTask<String, String, Void> {
                 }
                 //Log.d("Test:", "coordinate: "+pos.toString());
             }
-            mClusterManager.cluster();
 
             //zoom sul primo appalto aggiunto
             if(visualizza.size()>0) {
@@ -229,7 +212,7 @@ public class DataLoader extends AsyncTask<String, String, Void> {
             Log.e("DataLoader setMarkers()", e.getMessage());
         }
     }
-
+/*
     private LatLng random_marker(double max_range, double x0, double y0){
         Random r = new Random();
         double u,v,w,t,x,y;
@@ -241,17 +224,13 @@ public class DataLoader extends AsyncTask<String, String, Void> {
         y = w * sin(t);
         return new LatLng(x0+x,y0+y);
     }
-
+*/
     public ArrayList<Appalto> getAppalti() {
         return appalti;
     }
 
     public ArrayList<Appalto> getTrovati() {
         return trovati;
-    }
-
-    public ClusterManager<MyItem> getmClusterManager() {
-        return mClusterManager;
     }
 
 }

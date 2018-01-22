@@ -67,4 +67,11 @@
     <string name="insert_company">Insert a company</string>
     <string name="title_activity_company_list">Companies List</string>
     <string name="title_activity_selected_company">Selected Company</string>
+    <string name="insert_anno">Insert a year</string>
+    <string name="title_activity_start">StartActivity</string>
+    <string name="filter_anno">Filter by year</string>
+    <string name="importo_maggiore">Max cost</string>
+    <string name="importo_minore">Min cost</string>
+    <string name="importo_di">Cost under</string>
+    <string name="e_di">and over</string>
 </resources>

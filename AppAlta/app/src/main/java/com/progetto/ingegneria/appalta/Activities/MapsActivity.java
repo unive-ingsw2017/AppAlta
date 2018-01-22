@@ -7,11 +7,13 @@ import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import com.arlib.floatingsearchview.FloatingSearchView;
@@ -49,6 +51,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MapsActivity.this,StartActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
 
         mSearchView = (FloatingSearchView) findViewById(R.id.floating_search_view);
         mSearchView.setSearchHint(String.valueOf(getApplication().getResources().getText(R.string.searh_location)));
@@ -141,7 +153,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             if (loader.getStatus() == AsyncTask.Status.RUNNING)
                                 loader.cancel(true);
                             if (loader.getStatus() != AsyncTask.Status.RUNNING && saver.getStatus() != AsyncTask.Status.RUNNING) {
-                                loader = new DataLoader(MapsActivity.this, getApplicationContext(), mMap, preferencesMarkers);
+                                loader = new DataLoader(MapsActivity.this, getApplicationContext(), mMap, 0);
                                 loader.execute();
                             }
                         } catch (Exception e) {
@@ -153,14 +165,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         try {
                             if (loader.getStatus() == AsyncTask.Status.RUNNING)
                                 loader.cancel(true);
-                            loader.getmClusterManager().clearItems();
                             mMap.clear();
                             Log.d("MapsActivity onOptionsItemSelected()", "mappa pulita");
                         } catch (Exception e) {
                             Log.e("MapsActivity onOptionsItemSelected()", e.getMessage());
                         }
                         break;
-
+                    /*
                     case R.id.action_list:
                         try {
                             startActivity(new Intent(getApplicationContext(), ListActivity.class));
@@ -176,7 +187,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             Log.e("MapsActivity onOptionsItemSelected()", e.getMessage());
                         }
                         break;
-
+                    */
                     case R.id.action_info:
                         try {
                             AlertDialog alertDialog = new AlertDialog.Builder(MapsActivity.this).create();
@@ -199,6 +210,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         loadPreferences();
         setUpMapIfNeeded();
+        loader = new DataLoader(MapsActivity.this, getApplicationContext(), mMap, 0);
+        loader.execute();
+        saver = new DataSaver(MapsActivity.this, getApplicationContext());
     }
 
     @Override
@@ -249,10 +263,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 setUpMap();
             }
         }
-
-        loader = new DataLoader(MapsActivity.this, getApplicationContext(), mMap, -1);
-        loader.execute();
-        saver = new DataSaver(MapsActivity.this, getApplicationContext());
     }
 
     /**

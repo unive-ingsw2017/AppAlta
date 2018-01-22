@@ -1,10 +1,8 @@
 package com.progetto.ingegneria.appalta.Activities;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v4.content.ContextCompat;
@@ -13,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -44,8 +43,6 @@ public class ListActivity extends AppCompatActivity {
 
     private ArrayList<Appalto> appList = new ArrayList<>();
     private RecyclerViewAdapterAppalto mAdapter;
-    private SharedPreferences sharedpreferences;
-    private static final String MyPREFERENCES = "MyPrefs" ;
     private HashMap<Type, String> filters;
 
     @Override
@@ -100,7 +97,31 @@ public class ListActivity extends AppCompatActivity {
         mAdapter = new RecyclerViewAdapterAppalto(appList);
         recyclerView.setAdapter(mAdapter);
         resetFilter();
-
+        Bundle dati = getIntent().getExtras();
+        if (dati != null) {
+            String inserted_titolo = dati.getString("inserted_titolo");
+            String inserted_azienda= dati.getString("inserted_azienda");
+            String inserted_importoMin= dati.getString("inserted_importoMin");
+            String inserted_importoMax= dati.getString("inserted_importoMax");
+            String inserted_anno= dati.getString("inserted_anno");
+            String inserted_tipo= dati.getString("inserted_tipo");
+            String inserted_citta= dati.getString("inserted_citta");
+            if(TextUtils.isEmpty(inserted_titolo+inserted_azienda+inserted_importoMin+inserted_importoMax+inserted_anno+inserted_tipo+inserted_citta))
+                filters.put(Type.NONE,"yes");
+            else
+                filters.put(Type.NONE,"");
+            if(inserted_titolo!=null)
+                filters.put(Type.TITLE,inserted_titolo.toLowerCase());
+            if(inserted_tipo!=null)
+                filters.put(Type.TYPE,inserted_tipo.toLowerCase());
+            if(inserted_citta!=null)
+                filters.put(Type.CITY,inserted_citta.toLowerCase());
+            if(inserted_azienda!=null)
+                filters.put(Type.COMPANY,inserted_azienda.toLowerCase());
+            filters.put(Type.ANNO,inserted_anno);
+            filters.put(Type.MIN,inserted_importoMin);
+            filters.put(Type.MAX,inserted_importoMax);
+        }
     }
 
     private boolean prepareData() {
@@ -154,54 +175,88 @@ public class ListActivity extends AppCompatActivity {
                         titolo=obj.getString("titolo").toLowerCase(),
                         cig=obj.getString("cig").toLowerCase(),
                         tipo=obj.getString("tipo").toLowerCase(),
-                        anno=obj.getString("anno").toLowerCase(),
+                        anno=obj.getString("anno"),
                         aggiudicatario=obj.getString("aggiudicatario").toLowerCase(),
                         cod_fiscale_iva=obj.getString("cod_fiscale_iva").toLowerCase(),
                         importo_aggiudicazione=obj.getString("importo_aggiudicazione").toLowerCase(),
                         dataInizio=obj.getString("dataInizio").toLowerCase(),
                         responsabile=obj.getString("responsabile").toLowerCase();
 
-                if (filters.get(Type.NONE).equalsIgnoreCase("yes"))
+                if (filters.get(Type.NONE).equalsIgnoreCase("yes")) {
+                    Log.d("ListActivity","NONE true: "+filters.get(Type.NONE));
                     return true;
-                if ((!filters.get(Type.ALL).equalsIgnoreCase("")) && (!tipo.contains(filters.get(Type.ALL)) && !citta.contains(filters.get(Type.ALL)) && !titolo.contains(filters.get(Type.ALL)) && !cig.contains(filters.get(Type.ALL)) && !anno.contains(filters.get(Type.ALL)) && !aggiudicatario.contains(filters.get(Type.ALL)) && !cod_fiscale_iva.contains(filters.get(Type.ALL)) && !importo_aggiudicazione.contains(filters.get(Type.ALL))&& !dataInizio.contains(filters.get(Type.ALL)) && !responsabile.contains(filters.get(Type.ALL)) ))
+                }
+                if ((!filters.get(Type.ALL).equalsIgnoreCase("")) && (!tipo.contains(filters.get(Type.ALL)) && !citta.contains(filters.get(Type.ALL)) && !titolo.contains(filters.get(Type.ALL)) && !cig.contains(filters.get(Type.ALL)) && !anno.contains(filters.get(Type.ALL)) && !aggiudicatario.contains(filters.get(Type.ALL)) && !cod_fiscale_iva.contains(filters.get(Type.ALL)) && !importo_aggiudicazione.contains(filters.get(Type.ALL))&& !dataInizio.contains(filters.get(Type.ALL)) && !responsabile.contains(filters.get(Type.ALL)) )) {
+                    Log.d("ListActivity","ALL false");
                     return false;
-                if (!filters.get(Type.CITY).equalsIgnoreCase("") && !citta.contains(filters.get(Type.CITY)))
+                }
+                if (!filters.get(Type.CITY).equalsIgnoreCase("") && !citta.contains(filters.get(Type.CITY))) {
+                    Log.d("ListActivity","CITY false: "+filters.get(Type.CITY)+" !contains "+citta);
                     return false;
-                if (!filters.get(Type.TITLE).equalsIgnoreCase("") && !titolo.contains(filters.get(Type.TITLE)))
+                }
+                if (!filters.get(Type.TITLE).equalsIgnoreCase("") && !titolo.contains(filters.get(Type.TITLE))) {
+                    Log.d("ListActivity","TITLE false: "+filters.get(Type.TITLE)+" !contains "+titolo);
                     return false;
-                if (!filters.get(Type.CIG).equalsIgnoreCase("") && !cig.contains(filters.get(Type.CIG)))
+                }
+                if (!filters.get(Type.TYPE).equalsIgnoreCase("") && !tipo.contains(filters.get(Type.TYPE))) {
+                    Log.d("ListActivity","TYPE false: "+filters.get(Type.TYPE)+" !contains "+tipo);
                     return false;
-                if (!filters.get(Type.TYPE).equalsIgnoreCase("") && !tipo.contains(filters.get(Type.TYPE)))
+                }
+                if (!filters.get(Type.COD_IVA).equalsIgnoreCase("") && !cod_fiscale_iva.contains(filters.get(Type.COD_IVA))) {
+                    Log.d("ListActivity","COD_IVA false: "+filters.get(Type.COD_IVA)+" !contains "+cod_fiscale_iva);
                     return false;
-                if (!filters.get(Type.COD_IVA).equalsIgnoreCase("") && !cod_fiscale_iva.contains(filters.get(Type.COD_IVA)))
+                }
+                if (!filters.get(Type.COMPANY).equalsIgnoreCase("") && !aggiudicatario.contains(filters.get(Type.COMPANY))){
+                    Log.d("ListActivity","COMPANY false: "+filters.get(Type.COMPANY)+" !contains "+aggiudicatario);
                     return false;
+                }
+                if (!filters.get(Type.ANNO).equalsIgnoreCase("") && !anno.contains(filters.get(Type.ANNO))){
+                    Log.d("ListActivity","ANNO false: "+filters.get(Type.ANNO)+" !contains "+anno);
+                    return false;
+                }
+                double importo = 0;
+                if(!TextUtils.isEmpty(importo_aggiudicazione) && !importo_aggiudicazione.contains("/"))
+                    importo = Double.parseDouble(importo_aggiudicazione.replaceAll(",","."));
+                if (!filters.get(Type.MIN).equalsIgnoreCase("") && !(importo <= Double.parseDouble(filters.get(Type.MIN).replace(",",".")))) {
+                    Log.d("ListActivity","MIN false: "+importo+" < "+filters.get(Type.MIN));
+                    return false;
+                }
+                if (!filters.get(Type.MAX).equalsIgnoreCase("") && !(importo >= Double.parseDouble(filters.get(Type.MAX).replace(",",".")))) {
+                    Log.d("ListActivity","MAX false: "+importo+" > "+filters.get(Type.MAX));
+                    return false;
+                }
             }
             catch (Exception e){
                 Log.e("ListActivity filter()", e.getMessage());
+                return false;
             }
         }
+
         return true;
     }
-
     private void resetFilter(){
         filters = new HashMap<>();
         filters.put(Type.NONE,"yes");
-        filters.put(Type.CIG,"");
         filters.put(Type.CITY,"");
         filters.put(Type.TITLE,"");
         filters.put(Type.TYPE,"");
         filters.put(Type.COD_IVA,"");
+        filters.put(Type.COMPANY,"");
+        filters.put(Type.ANNO,"");
+        filters.put(Type.MAX,"");
+        filters.put(Type.MIN,"");
         filters.put(Type.ALL,"");
     }
 
     private void alert(final Type filter_type){
         String title, message;
         switch (filter_type){
-            case CIG: title= String.valueOf(getApplication().getResources().getText(R.string.filter_cig)); message=String.valueOf(getApplication().getResources().getText(R.string.insert_cig)); break;
             case CITY: title=String.valueOf(getApplication().getResources().getText(R.string.filter_citta)); message=String.valueOf(getApplication().getResources().getText(R.string.insert_citta)); break;
             case TITLE: title=String.valueOf(getApplication().getResources().getText(R.string.filter_titolo)); message=String.valueOf(getApplication().getResources().getText(R.string.insert_titolo)); break;
             case TYPE: title=String.valueOf(getApplication().getResources().getText(R.string.filter_type)); message=String.valueOf(getApplication().getResources().getText(R.string.insert_type)); break;
             case COD_IVA: title=String.valueOf(getApplication().getResources().getText(R.string.filter_cod_iva)); message=String.valueOf(getApplication().getResources().getText(R.string.insert_cod_iva)); break;
+            case COMPANY: title=String.valueOf(getApplication().getResources().getText(R.string.filter_company)); message=String.valueOf(getApplication().getResources().getText(R.string.insert_company)); break;
+            case ANNO: title=String.valueOf(getApplication().getResources().getText(R.string.filter_anno)); message=String.valueOf(getApplication().getResources().getText(R.string.insert_anno)); break;
             case ALL: title=String.valueOf(getApplication().getResources().getText(R.string.filter_search)); message=String.valueOf(getApplication().getResources().getText(R.string.insert_search)); break;
             default: title=String.valueOf(getApplication().getResources().getText(R.string.filter_null)); message=String.valueOf(getApplication().getResources().getText(R.string.insert_null)); break;
         }
@@ -243,51 +298,7 @@ public class ListActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        loadPreferences();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        savePreferences();
-    }
-
-    private void savePreferences(){
-        try {
-            sharedpreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = sharedpreferences.edit();
-            editor.putString(Type.NONE.toString(), filters.get(Type.NONE));
-            editor.putString(Type.CIG.toString(), filters.get(Type.CIG));
-            editor.putString(Type.CITY.toString(), filters.get(Type.CITY));
-            editor.putString(Type.TITLE.toString(), filters.get(Type.TITLE));
-            editor.putString(Type.TYPE.toString(), filters.get(Type.TYPE));
-            editor.putString(Type.COD_IVA.toString(), filters.get(Type.COD_IVA));
-            editor.putString(Type.ALL.toString(), filters.get(Type.ALL));
-            editor.apply();
-            Log.d("ListActivity savePreferenes()", "eseguita - filtro salvato");
-        }
-        catch(Exception e){
-            Log.e("ListActivity savePreferenes()", e.getMessage());
-        }
-    }
-
-    @SuppressLint("SetTextI18n")
-    private void loadPreferences(){
-        try {
-            sharedpreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
-            filters.put(Type.NONE, sharedpreferences.getString(Type.NONE.toString(),"yes"));
-            filters.put(Type.CIG, sharedpreferences.getString(Type.CIG.toString(),""));
-            filters.put(Type.CITY, sharedpreferences.getString(Type.CITY.toString(),""));
-            filters.put(Type.TITLE, sharedpreferences.getString(Type.TITLE.toString(),""));
-            filters.put(Type.TYPE, sharedpreferences.getString(Type.TYPE.toString(),""));
-            filters.put(Type.COD_IVA, sharedpreferences.getString(Type.COD_IVA.toString(),""));
-            filters.put(Type.ALL, sharedpreferences.getString(Type.ALL.toString(),""));
-            prepareData();
-            Log.d("ListActivity loadPreferences()", "eseguita - filtro caricato");
-        }
-        catch(Exception e){
-            Log.e("ListActivity loadPreferences()", e.getMessage());
-        }
+        prepareData();
     }
 
     @Override
@@ -295,11 +306,14 @@ public class ListActivity extends AppCompatActivity {
         super.onSaveInstanceState(outState);
         try {
             outState.putString(Type.NONE.toString(), filters.get(Type.NONE));
-            outState.putString(Type.CIG.toString(), filters.get(Type.CIG));
             outState.putString(Type.CITY.toString(), filters.get(Type.CITY));
             outState.putString(Type.TITLE.toString(), filters.get(Type.TITLE));
             outState.putString(Type.TYPE.toString(), filters.get(Type.TYPE));
             outState.putString(Type.COD_IVA.toString(), filters.get(Type.COD_IVA));
+            outState.putString(Type.COMPANY.toString(), filters.get(Type.COMPANY));
+            outState.putString(Type.ANNO.toString(), filters.get(Type.ANNO));
+            outState.putString(Type.MAX.toString(), filters.get(Type.MAX));
+            outState.putString(Type.MIN.toString(), filters.get(Type.MIN));
             outState.putString(Type.ALL.toString(), filters.get(Type.ALL));
             Log.d("ListActivity onSaveInstanceState()", "filtro salvato");
         }
@@ -316,11 +330,6 @@ public class ListActivity extends AppCompatActivity {
                 filters.put(Type.NONE, savedInstanceState.getString(Type.NONE.toString()));
             else
                 filters.put(Type.NONE, "yes");
-
-            if (savedInstanceState.getString(Type.CIG.toString()) != null)
-                filters.put(Type.CIG, savedInstanceState.getString(Type.CIG.toString()));
-            else
-                filters.put(Type.CIG, "");
 
             if (savedInstanceState.getString(Type.CITY.toString()) != null)
                 filters.put(Type.CITY, savedInstanceState.getString(Type.CITY.toString()));
@@ -342,6 +351,26 @@ public class ListActivity extends AppCompatActivity {
             else
                 filters.put(Type.COD_IVA, "");
 
+            if (savedInstanceState.getString(Type.COMPANY.toString()) != null)
+                filters.put(Type.COMPANY, savedInstanceState.getString(Type.COMPANY.toString()));
+            else
+                filters.put(Type.COMPANY, "");
+
+            if (savedInstanceState.getString(Type.ANNO.toString()) != null)
+                filters.put(Type.ANNO, savedInstanceState.getString(Type.ANNO.toString()));
+            else
+                filters.put(Type.ANNO, "");
+
+            if (savedInstanceState.getString(Type.MAX.toString()) != null)
+                filters.put(Type.MAX, savedInstanceState.getString(Type.MAX.toString()));
+            else
+                filters.put(Type.MAX, "");
+
+            if (savedInstanceState.getString(Type.MIN.toString()) != null)
+                filters.put(Type.MIN, savedInstanceState.getString(Type.MIN.toString()));
+            else
+                filters.put(Type.MIN, "");
+
             if (savedInstanceState.getString(Type.ALL.toString()) != null)
                 filters.put(Type.ALL, savedInstanceState.getString(Type.ALL.toString()));
             else
@@ -357,7 +386,7 @@ public class ListActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        //getMenuInflater().inflate(R.menu.menu_menu, menu);
+        //getMenuInflater().inflate(R.menu.start_menu, menu);
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_list, menu);
         return super.onCreateOptionsMenu(menu);
@@ -371,9 +400,6 @@ public class ListActivity extends AppCompatActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         switch (item.getItemId()) {
-            case R.id.filter_cig:
-                alert(Type.CIG);
-                break;
             case R.id.filter_city:
                 alert(Type.CITY);
                 break;
@@ -385,6 +411,12 @@ public class ListActivity extends AppCompatActivity {
                 break;
             case R.id.filter_cod_iva:
                 alert(Type.COD_IVA);
+                break;
+            case R.id.filter_company:
+                alert(Type.COMPANY);
+                break;
+            case R.id.filter_anno:
+                alert(Type.ANNO);
                 break;
             case R.id.filter_delete:
                 final Toast toast = Toast.makeText(getApplicationContext(),R.string.filter_deleted,Toast.LENGTH_SHORT);
@@ -401,9 +433,12 @@ public class ListActivity extends AppCompatActivity {
                 dialogBuilder.setTitle(R.string.filter_list);
                 TextView view_city = (TextView) dialogView.findViewById(R.id.filter_city_alert);
                 TextView view_title = (TextView) dialogView.findViewById(R.id.filter_title_alert);
-                TextView view_cig = (TextView) dialogView.findViewById(R.id.filter_cig_alert);
                 TextView view_type =(TextView) dialogView.findViewById(R.id.filter_type_alert);
                 TextView view_cod_iva =(TextView) dialogView.findViewById(R.id.filter_cod_iva_alert);
+                TextView view_company =(TextView) dialogView.findViewById(R.id.filter_company_alert);
+                TextView view_anno =(TextView) dialogView.findViewById(R.id.filter_anno_alert);
+                TextView view_max =(TextView) dialogView.findViewById(R.id.filter_max_alert);
+                TextView view_min =(TextView) dialogView.findViewById(R.id.filter_min_alert);
                 TextView view_all = (TextView) dialogView.findViewById(R.id.filter_search_alert);
 
                 if(filters.get(Type.CITY).equalsIgnoreCase(""))
@@ -416,11 +451,6 @@ public class ListActivity extends AppCompatActivity {
                 else
                     view_title.setText(filters.get(Type.TITLE));
 
-                if (filters.get(Type.CIG).equalsIgnoreCase(""))
-                    view_cig.setHint(R.string.filter_null);
-                else
-                    view_cig.setText(filters.get(Type.CIG));
-
                 if(filters.get(Type.TYPE).equalsIgnoreCase(""))
                     view_type.setHint(R.string.filter_null);
                 else
@@ -430,6 +460,26 @@ public class ListActivity extends AppCompatActivity {
                     view_cod_iva.setHint(R.string.filter_null);
                 else
                     view_cod_iva.setText(filters.get(Type.COD_IVA));
+
+                if(filters.get(Type.COMPANY).equalsIgnoreCase(""))
+                    view_company.setHint(R.string.filter_null);
+                else
+                    view_company.setText(filters.get(Type.COMPANY));
+
+                if(filters.get(Type.MAX).equalsIgnoreCase(""))
+                    view_max.setHint(R.string.filter_null);
+                else
+                    view_max.setText(filters.get(Type.MAX));
+
+                if(filters.get(Type.MIN).equalsIgnoreCase(""))
+                    view_min.setHint(R.string.filter_null);
+                else
+                    view_min.setText(filters.get(Type.MIN));
+
+                if(filters.get(Type.ANNO).equalsIgnoreCase(""))
+                    view_anno.setHint(R.string.filter_null);
+                else
+                    view_anno.setText(filters.get(Type.ANNO));
 
                 if(filters.get(Type.ALL).equalsIgnoreCase(""))
                     view_all.setHint(R.string.filter_null);
@@ -445,6 +495,7 @@ public class ListActivity extends AppCompatActivity {
                         });
                 dialogBuilder.show();
                 break;
+
             case android.R.id.home:
                 NavUtils.navigateUpTo(this, getIntent());
                 finish();
@@ -456,11 +507,14 @@ public class ListActivity extends AppCompatActivity {
 
     public enum Type{
         NONE,
-        CIG,
         TITLE,
         CITY,
         TYPE,
         COD_IVA,
+        COMPANY,
+        ANNO,
+        MAX,
+        MIN,
         ALL,
     }
 }

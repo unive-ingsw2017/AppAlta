@@ -9,7 +9,7 @@
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="@dimen/activity_horizontal_margin">
+            android:paddingBottom="@dimen/recycler_row_margin">
 
             <TextView
                 android:layout_width="0dp"
@@ -31,14 +31,15 @@
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="@dimen/activity_horizontal_margin" >
+            android:paddingBottom="@dimen/recycler_row_margin" >
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:text="@string/selected_titolo"
                 android:layout_weight="1"
-                android:textStyle="bold"/>
+                android:text="@string/selected_titolo"
+                android:textColor="@color/primary"
+                android:textStyle="bold" />
 
             <TextView
                 android:layout_width="0dp"
@@ -55,8 +56,9 @@
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:text="@string/selected_citta"
                 android:layout_weight="1"
+                android:text="@string/selected_citta"
+                android:textColor="@color/primary"
                 android:textStyle="bold" />
 
             <TextView

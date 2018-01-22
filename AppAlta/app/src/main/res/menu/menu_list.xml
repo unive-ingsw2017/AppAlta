@@ -12,23 +12,31 @@
         android:title="@string/filter_titolo"
         android:orderInCategory="2"
         app:showAsAction="never" />
-    <item
-        android:id="@+id/filter_cig"
-        android:title="@string/filter_cig"
-        android:orderInCategory="3"
-        app:showAsAction="never" />
 
     <item
         android:id="@+id/filter_type"
         android:title="@string/filter_type"
-        android:orderInCategory="4"
+        android:orderInCategory="3"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/filter_cod_iva"
         android:title="@string/filter_cod_iva"
+        android:orderInCategory="4"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/filter_anno"
+        android:title="@string/filter_anno"
         android:orderInCategory="5"
         app:showAsAction="never" />
+
+    <item
+        android:id="@+id/filter_company"
+        android:title="@string/filter_company"
+        android:orderInCategory="6"
+        app:showAsAction="never" />
+
 
     <item
         android:id="@+id/filter_list"

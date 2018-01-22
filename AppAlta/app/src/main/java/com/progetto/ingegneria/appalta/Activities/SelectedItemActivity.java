@@ -55,7 +55,7 @@ public class SelectedItemActivity extends ActionBarActivity {
         checkTextData(text_anno, app.getAnno());
         checkTextData(text_aggiudicatario, app.getAggiudicatario());
         checkTextData(text_cod_fisc, app.getCod_fiscale_iva());
-        checkTextData(text_importo, app.getImporto_aggiudicazione());
+        checkTextData(text_importo, app.getImporto_aggiudicazione().concat("€"));
         checkTextData(text_data_inizio, app.getDataInizio());
         checkTextData(text_responsabile, app.getResponsabile());
         checkTextData(text_citta, app.getCitta());

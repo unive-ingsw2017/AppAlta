@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name" translatable="false">appalta</string>
+    <string name="app_name" translatable="false">Appalta</string>
 
     <!--Activity -->
     <string name="title_activity_init">Inizializzazione</string>
@@ -74,6 +74,7 @@
     <string name="selected_id">Identificativo:</string>
     <string name="filter_company">Filtra per azienda</string>
     <string name="insert_company">Inserisci un\'azienda da cercare</string>
+    <string name="insert_anno">Inserisci un\'anno da cercare</string>
 
     <!-- Activity CompanyList-->
     <string name="title_activity_selected_company">Azienda Selezionata</string>
@@ -87,6 +88,12 @@
     <string name="MAP_TYPE_NORMAL">Normale</string>
     <string name="MAP_TYPE_SATELLITE">Satellite</string>
     <string name="MAP_TYPE_TERRAIN">Terreno</string>
+    <string name="title_activity_start">StartActivity</string>
+    <string name="filter_anno">Filtra per anno</string>
+    <string name="importo_maggiore">Importo maggiore di:</string>
+    <string name="importo_minore">Importo minore di:</string>
+    <string name="importo_di">Importo minore di</string>
+    <string name="e_di">e maggiore di</string>
 
 
 </resources>

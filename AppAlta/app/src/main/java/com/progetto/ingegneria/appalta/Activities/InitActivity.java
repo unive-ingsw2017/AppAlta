@@ -37,7 +37,7 @@ public class InitActivity extends Activity {
             Log.e("Init:", e.getMessage());
         }
         finally{
-            Intent intent = new Intent(InitActivity.this,MapsActivity.class);
+            Intent intent = new Intent(InitActivity.this,StartActivity.class);
             startActivity(intent);
         }
     }
@@ -64,7 +64,7 @@ public class InitActivity extends Activity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        //getMenuInflater().inflate(R.menu.menu_menu, menu);
+        //getMenuInflater().inflate(R.menu.start_menu, menu);
         return true;
     }
 
