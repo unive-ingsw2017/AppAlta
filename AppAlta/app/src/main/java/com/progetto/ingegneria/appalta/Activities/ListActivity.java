@@ -1,8 +1,10 @@
 package com.progetto.ingegneria.appalta.Activities;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v4.content.ContextCompat;
@@ -17,15 +19,17 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.progetto.ingegneria.appalta.Adapters.EmptyRecyclerView;
 import com.progetto.ingegneria.appalta.Adapters.RecyclerViewAdapterAppalto;
 import com.progetto.ingegneria.appalta.Classes.Appalto;
 import com.progetto.ingegneria.appalta.Classes.DividerItemDecoration;
@@ -45,14 +49,14 @@ public class ListActivity extends AppCompatActivity {
     private RecyclerViewAdapterAppalto mAdapter;
     private HashMap<Type, String> filters;
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
-        //Toolbar toolbar = (Toolbar) findViewById(R.cig.toolbar);
-        //setSupportActionBar(toolbar);
+        //setupUI(findViewById(R.id.main_content));
 
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        EmptyRecyclerView recyclerView = (EmptyRecyclerView) findViewById(R.id.recycler_view);
         android.support.design.widget.FloatingActionButton fab = (android.support.design.widget.FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -60,12 +64,13 @@ public class ListActivity extends AppCompatActivity {
                 Animation animation1 = new AlphaAnimation(0.3f, 1.0f);
                 animation1.setDuration(100);
                 v.startAnimation(animation1);
-                alert(Type.ALL);
+                alert();
             }
         });
+
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(mLayoutManager);
-
+        recyclerView.setEmptyView(findViewById(R.id.empty_view));
         recyclerView.setClickable(true);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
@@ -101,6 +106,7 @@ public class ListActivity extends AppCompatActivity {
         if (dati != null) {
             String inserted_titolo = dati.getString("inserted_titolo");
             String inserted_azienda= dati.getString("inserted_azienda");
+            String inserted_cod= dati.getString("inserted_cod");
             String inserted_importoMin= dati.getString("inserted_importoMin");
             String inserted_importoMax= dati.getString("inserted_importoMax");
             String inserted_anno= dati.getString("inserted_anno");
@@ -110,17 +116,22 @@ public class ListActivity extends AppCompatActivity {
                 filters.put(Type.NONE,"yes");
             else
                 filters.put(Type.NONE,"");
-            if(inserted_titolo!=null)
+            if(!TextUtils.isEmpty(inserted_titolo))
                 filters.put(Type.TITLE,inserted_titolo.toLowerCase());
-            if(inserted_tipo!=null)
+            if(!TextUtils.isEmpty(inserted_tipo))
                 filters.put(Type.TYPE,inserted_tipo.toLowerCase());
-            if(inserted_citta!=null)
+            if(!TextUtils.isEmpty(inserted_cod))
+                filters.put(Type.COD_IVA,inserted_cod.toLowerCase());
+            if(!TextUtils.isEmpty(inserted_citta))
                 filters.put(Type.CITY,inserted_citta.toLowerCase());
-            if(inserted_azienda!=null)
+            if(!TextUtils.isEmpty(inserted_azienda))
                 filters.put(Type.COMPANY,inserted_azienda.toLowerCase());
-            filters.put(Type.ANNO,inserted_anno);
-            filters.put(Type.MIN,inserted_importoMin);
-            filters.put(Type.MAX,inserted_importoMax);
+            if(!TextUtils.isEmpty(inserted_anno))
+                filters.put(Type.ANNO,inserted_anno);
+            if(!TextUtils.isEmpty(inserted_importoMin))
+                filters.put(Type.MIN,inserted_importoMin);
+            if(!TextUtils.isEmpty(inserted_importoMax))
+                filters.put(Type.MAX,inserted_importoMax);
         }
     }
 
@@ -183,46 +194,46 @@ public class ListActivity extends AppCompatActivity {
                         responsabile=obj.getString("responsabile").toLowerCase();
 
                 if (filters.get(Type.NONE).equalsIgnoreCase("yes")) {
-                    Log.d("ListActivity","NONE true: "+filters.get(Type.NONE));
+                    //Log.d("ListActivity","NONE true: "+filters.get(Type.NONE));
                     return true;
                 }
                 if ((!filters.get(Type.ALL).equalsIgnoreCase("")) && (!tipo.contains(filters.get(Type.ALL)) && !citta.contains(filters.get(Type.ALL)) && !titolo.contains(filters.get(Type.ALL)) && !cig.contains(filters.get(Type.ALL)) && !anno.contains(filters.get(Type.ALL)) && !aggiudicatario.contains(filters.get(Type.ALL)) && !cod_fiscale_iva.contains(filters.get(Type.ALL)) && !importo_aggiudicazione.contains(filters.get(Type.ALL))&& !dataInizio.contains(filters.get(Type.ALL)) && !responsabile.contains(filters.get(Type.ALL)) )) {
-                    Log.d("ListActivity","ALL false");
+                    //Log.d("ListActivity","ALL false");
                     return false;
                 }
                 if (!filters.get(Type.CITY).equalsIgnoreCase("") && !citta.contains(filters.get(Type.CITY))) {
-                    Log.d("ListActivity","CITY false: "+filters.get(Type.CITY)+" !contains "+citta);
+                    //Log.d("ListActivity","CITY false: "+filters.get(Type.CITY)+" !contains "+citta);
                     return false;
                 }
                 if (!filters.get(Type.TITLE).equalsIgnoreCase("") && !titolo.contains(filters.get(Type.TITLE))) {
-                    Log.d("ListActivity","TITLE false: "+filters.get(Type.TITLE)+" !contains "+titolo);
+                    //Log.d("ListActivity","TITLE false: "+filters.get(Type.TITLE)+" !contains "+titolo);
                     return false;
                 }
                 if (!filters.get(Type.TYPE).equalsIgnoreCase("") && !tipo.contains(filters.get(Type.TYPE))) {
-                    Log.d("ListActivity","TYPE false: "+filters.get(Type.TYPE)+" !contains "+tipo);
+                    //Log.d("ListActivity","TYPE false: "+filters.get(Type.TYPE)+" !contains "+tipo);
                     return false;
                 }
                 if (!filters.get(Type.COD_IVA).equalsIgnoreCase("") && !cod_fiscale_iva.contains(filters.get(Type.COD_IVA))) {
-                    Log.d("ListActivity","COD_IVA false: "+filters.get(Type.COD_IVA)+" !contains "+cod_fiscale_iva);
+                    //Log.d("ListActivity","COD_IVA false: "+filters.get(Type.COD_IVA)+" !contains "+cod_fiscale_iva);
                     return false;
                 }
                 if (!filters.get(Type.COMPANY).equalsIgnoreCase("") && !aggiudicatario.contains(filters.get(Type.COMPANY))){
-                    Log.d("ListActivity","COMPANY false: "+filters.get(Type.COMPANY)+" !contains "+aggiudicatario);
+                    //Log.d("ListActivity","COMPANY false: "+filters.get(Type.COMPANY)+" !contains "+aggiudicatario);
                     return false;
                 }
                 if (!filters.get(Type.ANNO).equalsIgnoreCase("") && !anno.contains(filters.get(Type.ANNO))){
-                    Log.d("ListActivity","ANNO false: "+filters.get(Type.ANNO)+" !contains "+anno);
+                    //Log.d("ListActivity","ANNO false: "+filters.get(Type.ANNO)+" !contains "+anno);
                     return false;
                 }
                 double importo = 0;
                 if(!TextUtils.isEmpty(importo_aggiudicazione) && !importo_aggiudicazione.contains("/"))
                     importo = Double.parseDouble(importo_aggiudicazione.replaceAll(",","."));
-                if (!filters.get(Type.MIN).equalsIgnoreCase("") && !(importo <= Double.parseDouble(filters.get(Type.MIN).replace(",",".")))) {
-                    Log.d("ListActivity","MIN false: "+importo+" < "+filters.get(Type.MIN));
+                if (!filters.get(Type.MIN).equalsIgnoreCase("") && (importo <= Double.parseDouble(filters.get(Type.MIN).replace(",",".")))) {
+                    //Log.d("ListActivity","MIN false: "+importo+" < "+filters.get(Type.MIN));
                     return false;
                 }
-                if (!filters.get(Type.MAX).equalsIgnoreCase("") && !(importo >= Double.parseDouble(filters.get(Type.MAX).replace(",",".")))) {
-                    Log.d("ListActivity","MAX false: "+importo+" > "+filters.get(Type.MAX));
+                if (!filters.get(Type.MAX).equalsIgnoreCase("") && (importo >= Double.parseDouble(filters.get(Type.MAX).replace(",",".")))) {
+                    //Log.d("ListActivity","MAX false: "+importo+" > "+filters.get(Type.MAX));
                     return false;
                 }
             }
@@ -231,9 +242,9 @@ public class ListActivity extends AppCompatActivity {
                 return false;
             }
         }
-
         return true;
     }
+
     private void resetFilter(){
         filters = new HashMap<>();
         filters.put(Type.NONE,"yes");
@@ -248,51 +259,128 @@ public class ListActivity extends AppCompatActivity {
         filters.put(Type.ALL,"");
     }
 
-    private void alert(final Type filter_type){
-        String title, message;
-        switch (filter_type){
-            case CITY: title=String.valueOf(getApplication().getResources().getText(R.string.filter_citta)); message=String.valueOf(getApplication().getResources().getText(R.string.insert_citta)); break;
-            case TITLE: title=String.valueOf(getApplication().getResources().getText(R.string.filter_titolo)); message=String.valueOf(getApplication().getResources().getText(R.string.insert_titolo)); break;
-            case TYPE: title=String.valueOf(getApplication().getResources().getText(R.string.filter_type)); message=String.valueOf(getApplication().getResources().getText(R.string.insert_type)); break;
-            case COD_IVA: title=String.valueOf(getApplication().getResources().getText(R.string.filter_cod_iva)); message=String.valueOf(getApplication().getResources().getText(R.string.insert_cod_iva)); break;
-            case COMPANY: title=String.valueOf(getApplication().getResources().getText(R.string.filter_company)); message=String.valueOf(getApplication().getResources().getText(R.string.insert_company)); break;
-            case ANNO: title=String.valueOf(getApplication().getResources().getText(R.string.filter_anno)); message=String.valueOf(getApplication().getResources().getText(R.string.insert_anno)); break;
-            case ALL: title=String.valueOf(getApplication().getResources().getText(R.string.filter_search)); message=String.valueOf(getApplication().getResources().getText(R.string.insert_search)); break;
-            default: title=String.valueOf(getApplication().getResources().getText(R.string.filter_null)); message=String.valueOf(getApplication().getResources().getText(R.string.insert_null)); break;
-        }
+    private void alert(){
+        final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(ListActivity.this);
+        LayoutInflater inflater = this.getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.alert_search, null);
+        dialogBuilder.setView(dialogView);
+        dialogBuilder.setTitle(R.string.search_list);
+        dialogView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                InputMethodManager in = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.CUPCAKE) {
+                    in.hideSoftInputFromWindow(v.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+                }
+                Log.e("Test","onTouch");
+                return false;
+            }
+        });
+/*
 
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(ListActivity.this);
-        // Setting Dialog Title
-        alertDialog.setTitle(title);
-        // Setting Dialog Message
-        alertDialog.setMessage(message);
-        final EditText input1 = new EditText(ListActivity.this);
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.MATCH_PARENT);
-        input1.setLayoutParams(lp);
-        alertDialog.setView(input1);
-        // Setting Positive "Yes" Button
-        alertDialog.setPositiveButton(R.string.confirm,
+*/      /*
+        final EditText text_city = (EditText) dialogView.findViewById(R.id.filter_city_alert);
+        final EditText text_title = (EditText) dialogView.findViewById(R.id.filter_title_alert);
+        final EditText text_type =(EditText) dialogView.findViewById(R.id.filter_type_alert);
+        final EditText text_cod_iva =(EditText) dialogView.findViewById(R.id.filter_cod_iva_alert);
+        final EditText text_company =(EditText) dialogView.findViewById(R.id.filter_company_alert);
+        final EditText text_anno =(EditText) dialogView.findViewById(R.id.filter_anno_alert);
+        final EditText text_max =(EditText) dialogView.findViewById(R.id.filter_max_alert);
+        final EditText text_min =(EditText) dialogView.findViewById(R.id.filter_min_alert);
+        */
+        final EditText text_all = (EditText) dialogView.findViewById(R.id.filter_search_alert);
+        /*
+        if(TextUtils.isEmpty(filters.get(Type.CITY)))
+            text_city.setHint(R.string.insert_citta);
+        else
+            text_city.setText(filters.get(Type.CITY));
+
+        if(TextUtils.isEmpty(filters.get(Type.TITLE)))
+            text_title.setHint(R.string.insert_titolo);
+        else
+            text_title.setText(filters.get(Type.TITLE));
+
+        if(TextUtils.isEmpty(filters.get(Type.TYPE)))
+            text_type.setHint(R.string.insert_type);
+        else
+            text_type.setText(filters.get(Type.TYPE));
+
+        if(TextUtils.isEmpty(filters.get(Type.COD_IVA)))
+            text_cod_iva.setHint(R.string.insert_cod_iva);
+        else
+            text_cod_iva.setText(filters.get(Type.COD_IVA));
+
+        if(TextUtils.isEmpty(filters.get(Type.COMPANY)))
+            text_company.setHint(R.string.insert_company);
+        else
+            text_company.setText(filters.get(Type.COMPANY));
+
+        if(TextUtils.isEmpty(filters.get(Type.MAX)))
+            text_max.setHint(R.string.insert_max);
+        else
+            text_max.setText(filters.get(Type.MAX));
+
+        if(TextUtils.isEmpty(filters.get(Type.MIN)))
+            text_min.setHint(R.string.insert_min);
+        else
+            text_min.setText(filters.get(Type.MIN));
+
+        if(TextUtils.isEmpty(filters.get(Type.ANNO)))
+            text_anno.setHint(R.string.insert_anno);
+        else
+            text_anno.setText(filters.get(Type.ANNO));
+        */
+        if(TextUtils.isEmpty(filters.get(Type.ALL)))
+            text_all.setHint(R.string.insert_search);
+        else
+            text_all.setText(filters.get(Type.ALL));
+
+        dialogBuilder.setNegativeButton(R.string.cancel,
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog,int which) {
-                        // Write your code here to execute after dialog
-                        filters.put(filter_type, String.valueOf(input1.getText()).toLowerCase());
-                        filters.put(Type.NONE, "");
-                        prepareData();
+                    dialog.cancel();
                     }
                 });
-        // Setting Negative "NO" Button
-        alertDialog.setNegativeButton(R.string.cancel,
+
+        dialogBuilder.setPositiveButton(R.string.confirm,
                 new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        // Write your code here to execute after dialog
+                    public void onClick(DialogInterface dialog,int which) {
+                        /*
+                        if(!TextUtils.isEmpty(text_city.getText().toString()))
+                            filters.put(Type.CITY,text_city.getText().toString());
+
+                        if(!TextUtils.isEmpty(text_title.getText().toString()))
+                            filters.put(Type.TITLE,text_title.getText().toString());
+
+                        if(!TextUtils.isEmpty(text_type.getText().toString()))
+                            filters.put(Type.TYPE,text_type.getText().toString());
+
+                        if(!TextUtils.isEmpty(text_cod_iva.getText().toString()))
+                            filters.put(Type.COD_IVA,text_cod_iva.getText().toString());
+
+                        if(!TextUtils.isEmpty(text_company.getText().toString()))
+                            filters.put(Type.COMPANY,text_company.getText().toString());
+
+                        if(!TextUtils.isEmpty(text_max.getText().toString()))
+                            filters.put(Type.MAX,text_max.getText().toString());
+
+                        if(!TextUtils.isEmpty(text_min.getText().toString()))
+                            filters.put(Type.MIN,text_min.getText().toString().toLowerCase());
+
+                        if(!TextUtils.isEmpty(text_anno.getText().toString()))
+                            filters.put(Type.ANNO,text_anno.getText().toString().toLowerCase());
+                        */
+                        if(!TextUtils.isEmpty(text_all.getText().toString())) {
+                            filters.put(Type.NONE,"");
+                            filters.put(Type.ALL, text_all.getText().toString().toLowerCase());
+                        }
+
+                        prepareData();
                         dialog.cancel();
                     }
                 });
-        // closed
-        // Showing Alert Message
-        alertDialog.show();
+        dialogBuilder.setCancelable(false);
+        dialogBuilder.show();
     }
 
     @Override
@@ -400,27 +488,11 @@ public class ListActivity extends AppCompatActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         switch (item.getItemId()) {
-            case R.id.filter_city:
-                alert(Type.CITY);
-                break;
-            case R.id.filter_title:
-                alert(Type.TITLE);
-                break;
-            case R.id.filter_type:
-                alert(Type.TYPE);
-                break;
-            case R.id.filter_cod_iva:
-                alert(Type.COD_IVA);
-                break;
-            case R.id.filter_company:
-                alert(Type.COMPANY);
-                break;
-            case R.id.filter_anno:
-                alert(Type.ANNO);
-                break;
             case R.id.filter_delete:
                 final Toast toast = Toast.makeText(getApplicationContext(),R.string.filter_deleted,Toast.LENGTH_SHORT);
-                resetFilter();
+                //resetto la ricerca globale
+                filters.put(Type.NONE,"yes");
+                filters.put(Type.ALL,"");
                 if(prepareData())
                     toast.show();
                 break;

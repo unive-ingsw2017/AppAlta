@@ -66,12 +66,13 @@
     <string name="filter_company">Filter by company</string>
     <string name="insert_company">Insert a company</string>
     <string name="title_activity_company_list">Companies List</string>
-    <string name="title_activity_selected_company">Selected Company</string>
     <string name="insert_anno">Insert a year</string>
     <string name="title_activity_start">StartActivity</string>
     <string name="filter_anno">Filter by year</string>
-    <string name="importo_maggiore">Max cost</string>
-    <string name="importo_minore">Min cost</string>
-    <string name="importo_di">Cost under</string>
-    <string name="e_di">and over</string>
+    <string name="filter_max">Max cost</string>
+    <string name="filter_min">Min cost</string>
+    <string name="empty_data">no data find</string>
+    <string name="insert_max">Insert max amount</string>
+    <string name="insert_min">Insert min amount</string>
+    <string name="search_list">Filter</string>
 </resources>

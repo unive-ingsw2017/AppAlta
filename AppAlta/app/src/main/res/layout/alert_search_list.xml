@@ -1,12 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView android:id="@+id/scrollview"
+<ScrollView
+    android:id="@+id/scrollview"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
     xmlns:android="http://schemas.android.com/apk/res/android">
     <LinearLayout
+        android:id="@+id/main_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
         android:paddingLeft="@dimen/alert_horizontal_padding"
         android:paddingRight="@dimen/alert_horizontal_padding"
         android:paddingBottom="@dimen/alert_vertical_padding">
@@ -17,23 +23,16 @@
             android:layout_height="wrap_content"
             android:paddingTop="@dimen/alert_vertical_padding">
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginStart="1dp"
-                android:layout_weight="1"
-                android:text="@string/filter_citta"
-                android:textColor="@color/primary"
-                android:textColorHint="@color/primary"
-                android:textStyle="bold" />
-
-            <TextView
+            <EditText
                 android:id="@+id/filter_city_alert"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="1dp"
                 android:layout_weight="1"
-                android:textColor="@color/primary" />
+                android:hint="@string/insert_citta"
+                android:textColor="@color/primary"
+                android:textColorHint="@color/primary"
+                android:textSize="16sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -42,23 +41,17 @@
             android:layout_height="wrap_content"
             android:paddingTop="@dimen/alert_vertical_padding">
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginStart="1dp"
-                android:layout_weight="1"
-                android:text="@string/filter_titolo"
-                android:textColor="@color/primary"
-                android:textColorHint="@color/primary"
-                android:textStyle="bold" />
-
-            <TextView
+            <EditText
                 android:id="@+id/filter_title_alert"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="1dp"
                 android:layout_weight="1"
-                android:textColor="@color/primary" />
+                android:hint="@string/insert_titolo"
+                android:textColor="@color/primary"
+                android:textColorHint="@color/primary"
+                android:textSize="16sp" />
+
         </LinearLayout>
 
         <LinearLayout
@@ -67,23 +60,17 @@
             android:layout_height="wrap_content"
             android:paddingTop="@dimen/alert_vertical_padding">
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginStart="1dp"
-                android:layout_weight="1"
-                android:text="@string/filter_type"
-                android:textColor="@color/primary"
-                android:textColorHint="@color/primary"
-                android:textStyle="bold" />
-
-            <TextView
+            <EditText
                 android:id="@+id/filter_type_alert"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="1dp"
                 android:layout_weight="1"
-                android:textColor="@color/primary" />
+                android:hint="@string/insert_type"
+                android:textColor="@color/primary"
+                android:textColorHint="@color/primary"
+                android:textSize="16sp" />
+
         </LinearLayout>
 
         <LinearLayout
@@ -92,23 +79,17 @@
             android:layout_height="wrap_content"
             android:paddingTop="@dimen/alert_vertical_padding">
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginStart="1dp"
-                android:layout_weight="1"
-                android:text="@string/filter_cod_iva"
-                android:textColor="@color/primary"
-                android:textColorHint="@color/primary"
-                android:textStyle="bold" />
-
-            <TextView
+            <EditText
                 android:id="@+id/filter_cod_iva_alert"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="1dp"
                 android:layout_weight="1"
-                android:textColor="@color/primary" />
+                android:hint="@string/insert_cod_iva"
+                android:textColor="@color/primary"
+                android:textColorHint="@color/primary"
+                android:textSize="16sp" />
+
         </LinearLayout>
 
         <LinearLayout
@@ -117,23 +98,17 @@
             android:layout_height="wrap_content"
             android:paddingTop="@dimen/alert_vertical_padding">
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginStart="1dp"
-                android:layout_weight="1"
-                android:text="@string/filter_company"
-                android:textColor="@color/primary"
-                android:textColorHint="@color/primary"
-                android:textStyle="bold" />
-
-            <TextView
+            <EditText
                 android:id="@+id/filter_company_alert"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="1dp"
                 android:layout_weight="1"
-                android:textColor="@color/primary" />
+                android:hint="@string/insert_company"
+                android:textColor="@color/primary"
+                android:textColorHint="@color/primary"
+                android:textSize="16sp" />
+
         </LinearLayout>
 
         <LinearLayout
@@ -142,23 +117,17 @@
             android:layout_height="wrap_content"
             android:paddingTop="@dimen/alert_vertical_padding">
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginStart="1dp"
-                android:layout_weight="1"
-                android:text="@string/filter_anno"
-                android:textColor="@color/primary"
-                android:textColorHint="@color/primary"
-                android:textStyle="bold" />
-
-            <TextView
+            <EditText
                 android:id="@+id/filter_anno_alert"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="1dp"
                 android:layout_weight="1"
-                android:textColor="@color/primary" />
+                android:hint="@string/insert_anno"
+                android:textColor="@color/primary"
+                android:textColorHint="@color/primary"
+                android:textSize="16sp" />
+
         </LinearLayout>
 
         <LinearLayout
@@ -167,23 +136,17 @@
             android:layout_height="wrap_content"
             android:paddingTop="@dimen/alert_vertical_padding">
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginStart="1dp"
-                android:layout_weight="1"
-                android:text="@string/filter_min"
-                android:textColor="@color/primary"
-                android:textColorHint="@color/primary"
-                android:textStyle="bold" />
-
-            <TextView
+            <EditText
                 android:id="@+id/filter_min_alert"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="1dp"
                 android:layout_weight="1"
-                android:textColor="@color/primary" />
+                android:hint="@string/insert_min"
+                android:textColor="@color/primary"
+                android:textColorHint="@color/primary"
+                android:textSize="16sp" />
+
         </LinearLayout>
 
         <LinearLayout
@@ -192,23 +155,17 @@
             android:layout_height="wrap_content"
             android:paddingTop="@dimen/alert_vertical_padding">
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginStart="1dp"
-                android:layout_weight="1"
-                android:text="@string/filter_max"
-                android:textColor="@color/primary"
-                android:textColorHint="@color/primary"
-                android:textStyle="bold" />
-
-            <TextView
+            <EditText
                 android:id="@+id/filter_max_alert"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="1dp"
                 android:layout_weight="1"
-                android:textColor="@color/primary" />
+                android:hint="@string/insert_max"
+                android:textColor="@color/primary"
+                android:textColorHint="@color/primary"
+                android:textSize="16sp" />
+
         </LinearLayout>
 
         <LinearLayout
@@ -217,23 +174,16 @@
             android:layout_height="wrap_content"
             android:paddingTop="@dimen/alert_vertical_padding">
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginStart="1dp"
-                android:layout_weight="1"
-                android:text="@string/filter_search"
-                android:textColor="@color/primary"
-                android:textColorHint="@color/primary"
-                android:textStyle="bold" />
-
-            <TextView
+            <EditText
                 android:id="@+id/filter_search_alert"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginStart="1dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
                 android:layout_weight="1"
-                android:textColor="@color/primary" />
+                android:hint="@string/insert_search"
+                android:textColor="@color/primary"
+                android:textColorHint="@color/primary"
+                android:textSize="16sp" />
 
         </LinearLayout>
     </LinearLayout>

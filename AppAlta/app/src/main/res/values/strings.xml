@@ -47,7 +47,7 @@
     <string name="selected_importo2">Importo:</string>
     <string name="selected_responsabile">Responsabile gara:</string>
 
-    <!-- Activity List-->
+    <!-- Filter List-->
     <string name="title_activity_list">Lista Appalti</string>
     <string name="filter_citta">Filtra per città</string>
     <string name="filter_titolo">Filtra per titolo</string>
@@ -59,7 +59,16 @@
     <string name="filter_search">Cerca negli appalti</string>
     <string name="filter_null">Nessun filtro selezionato</string>
     <string name="filter_list">Visualizza filtri attivi</string>
+    <string name="filter_anno">Filtra per anno</string>
+    <string name="filter_max">Importo massimo</string>
+    <string name="filter_min">Importo minimo</string>
+    <string name="filter_company">Filtra per azienda</string>
 
+    <!-- Insert List -->
+    <string name="insert_company">Inserisci un\'azienda da cercare</string>
+    <string name="insert_anno">Inserisci un\'anno da cercare</string>
+    <string name="insert_max">inserisci l\'importo massimo</string>
+    <string name="insert_min">inserisci l\'importo minimo</string>
     <string name="insert_citta">Inserisci una città da cercare</string>
     <string name="insert_titolo">Inserisci una titolo da cercare</string>
     <string name="insert_cig">Inserisci un cig</string>
@@ -68,32 +77,25 @@
     <string name="insert_search">Inserisci una stringa da cercare</string>
     <string name="insert_null">Seleziona un filtro prima di procedere</string>
 
-    <!-- Activity CompanyList-->
+    <!-- Activity List-->
     <string name="title_activity_company_list">Lista Aziende</string>
     <string name="selected_company">Azienda</string>
     <string name="selected_id">Identificativo:</string>
-    <string name="filter_company">Filtra per azienda</string>
-    <string name="insert_company">Inserisci un\'azienda da cercare</string>
-    <string name="insert_anno">Inserisci un\'anno da cercare</string>
+    <string name="search_list">Filtra Appalti</string>
 
-    <!-- Activity CompanyList-->
-    <string name="title_activity_selected_company">Azienda Selezionata</string>
+    <!-- Activity Start -->
+    <string name="title_activity_start">StartActivity</string>
 
     <!--Errori -->
     <string name="error_connection">Errore, hai controllato la tua connessione?</string>
     <string name="error_data">Errore. Dati Mancanti</string>
+    <string name="empty_data">nessun dato trovato</string>
 
     <!--Stringhe tipi mappe -->
     <string name="MAP_TYPE_HYBRID">Ibrida</string>
     <string name="MAP_TYPE_NORMAL">Normale</string>
     <string name="MAP_TYPE_SATELLITE">Satellite</string>
     <string name="MAP_TYPE_TERRAIN">Terreno</string>
-    <string name="title_activity_start">StartActivity</string>
-    <string name="filter_anno">Filtra per anno</string>
-    <string name="importo_maggiore">Importo maggiore di:</string>
-    <string name="importo_minore">Importo minore di:</string>
-    <string name="importo_di">Importo minore di</string>
-    <string name="e_di">e maggiore di</string>
 
 
 </resources>

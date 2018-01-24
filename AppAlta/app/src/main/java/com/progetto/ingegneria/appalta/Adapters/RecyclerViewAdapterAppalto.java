@@ -14,14 +14,14 @@ import java.util.ArrayList;
 /**
  * Created by matteo on 15/12/2017.
  */
-public class RecyclerViewAdapterAppalto extends RecyclerView.Adapter<RecyclerViewAdapterAppalto.MyViewHolder> {
+public class RecyclerViewAdapterAppalto extends EmptyRecyclerView.Adapter<RecyclerViewAdapterAppalto.MyViewHolder> {
 
     private ArrayList<Appalto> appList;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView cig, titolo, citta;
 
-        public MyViewHolder(View view) {
+        private MyViewHolder(View view) {
             super(view);
             cig = (TextView) view.findViewById(R.id.textCig);
             titolo = (TextView) view.findViewById(R.id.textTitolo);

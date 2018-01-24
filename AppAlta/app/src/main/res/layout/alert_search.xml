@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main_content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:layout_marginTop="@dimen/alert_vertical_padding"
+    android:layout_marginBottom="@dimen/alert_vertical_padding"
+    android:paddingLeft="@dimen/alert_horizontal_padding"
+    android:paddingRight="@dimen/alert_horizontal_padding">
+
+
+    <EditText
+        android:id="@+id/filter_search_alert"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="1dp"
+        android:hint="@string/insert_search"
+        android:textColor="@color/primary"
+        android:textColorHint="@color/primary"
+        android:textSize="16sp" />
+</LinearLayout>

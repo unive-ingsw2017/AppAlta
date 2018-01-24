@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -37,13 +38,13 @@ import java.util.List;
 
 public class StartActivity extends AppCompatActivity {
 
-    private AutoCompleteTextView textTitolo, textAzienda;
+    private AutoCompleteTextView textTitolo, textAzienda, textCodFiscIva;
     private EditText textImportoMin, textImportoMax;
     private Spinner spinnerAnno, spinnerTipo, spinnerCitta;
-    private String inserted_titolo, inserted_azienda, inserted_importoMin, inserted_importoMax, inserted_anno, inserted_tipo, inserted_citta;
-    private List<String> titoli, aziende, anni, tipi, citta;
+    private String inserted_titolo, inserted_azienda, inserted_importoMin, inserted_importoMax, inserted_anno, inserted_tipo, inserted_citta, inserted_cod;
+    private List<String> titoli, aziende, cod, anni, tipi, citta;
     private int posAnno, posTipo, posCitta;
-    private ArrayAdapter<String> dataAdapterTitolo, dataAdapterAzienda, dataAdapterTipo, dataAdapterAnno, dataAdapterCitta;
+    private ArrayAdapter<String> dataAdapterTitolo, dataAdapterAzienda, dataAdapterCodFiscIva, dataAdapterTipo, dataAdapterAnno, dataAdapterCitta;
     private DataSaver saver;
 
     @Override
@@ -51,11 +52,13 @@ public class StartActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
         setupUI(findViewById(R.id.main_content));
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         saver = new DataSaver(StartActivity.this, getApplicationContext());
 
         Button search = (Button) findViewById(R.id.button);
         textTitolo = (AutoCompleteTextView) findViewById(R.id.titolo);
         textAzienda = (AutoCompleteTextView) findViewById(R.id.company);
+        textCodFiscIva = (AutoCompleteTextView) findViewById(R.id.codFisc);
         textImportoMin = (EditText) findViewById(R.id.importoMin);
         textImportoMax = (EditText) findViewById(R.id.importoMax);
         spinnerAnno = (Spinner) findViewById(R.id.anno);
@@ -77,6 +80,7 @@ public class StartActivity extends AppCompatActivity {
                 Intent intent = new Intent(StartActivity.this,ListActivity.class);
                 inserted_titolo = textTitolo.getText().toString();
                 inserted_azienda = textAzienda.getText().toString();
+                inserted_cod = textCodFiscIva.getText().toString();
                 inserted_importoMin = textImportoMin.getText().toString();
                 inserted_importoMax = textImportoMax.getText().toString();
                 inserted_anno = anni.get(posAnno);
@@ -90,6 +94,7 @@ public class StartActivity extends AppCompatActivity {
                     inserted_citta="";
                 intent.putExtra("inserted_titolo", inserted_titolo);
                 intent.putExtra("inserted_azienda", inserted_azienda);
+                intent.putExtra("inserted_cod", inserted_cod);
                 intent.putExtra("inserted_importoMin", inserted_importoMin);
                 intent.putExtra("inserted_importoMax", inserted_importoMax);
                 intent.putExtra("inserted_anno", inserted_anno);
@@ -99,8 +104,10 @@ public class StartActivity extends AppCompatActivity {
             }
         });
 
+        //init arraylist
         titoli = new ArrayList<>();
         tipi = new ArrayList<>();
+        cod =new ArrayList<>();
         anni = new ArrayList<>();
         aziende = new ArrayList<>();
         citta = new ArrayList<>();
@@ -109,8 +116,10 @@ public class StartActivity extends AppCompatActivity {
         //AutoCompleteTextView
         dataAdapterTitolo = new ArrayAdapter<>(this,android.R.layout.simple_dropdown_item_1line, titoli);
         dataAdapterAzienda = new ArrayAdapter<>(this,android.R.layout.simple_dropdown_item_1line, aziende);
+        dataAdapterCodFiscIva = new ArrayAdapter<>(this,android.R.layout.simple_dropdown_item_1line, cod);
         textTitolo.setAdapter(dataAdapterTitolo);
         textAzienda.setAdapter(dataAdapterAzienda);
+        textCodFiscIva.setAdapter(dataAdapterCodFiscIva);
 
 
         //Spinners
@@ -203,6 +212,7 @@ public class StartActivity extends AppCompatActivity {
     private void setWidgets(){
         textTitolo.setText(inserted_titolo);
         textAzienda.setText(inserted_azienda);
+        textCodFiscIva.setText(inserted_cod);
         textImportoMax.setText(inserted_importoMax);
         textImportoMin.setText(inserted_importoMin);
         spinnerCitta.setSelection(posCitta);
@@ -219,12 +229,14 @@ public class StartActivity extends AppCompatActivity {
                     JSONObject jObject = jArray.getJSONObject(i);
                     if(!titoli.contains(jObject.getString("titolo")))
                         titoli.add(jObject.getString("titolo"));
+                    if(!aziende.contains(jObject.getString("aggiudicatario")))
+                        aziende.add(jObject.getString("aggiudicatario"));
+                    if(!cod.contains(jObject.getString("cod_fiscale_iva")))
+                        cod.add(jObject.getString("cod_fiscale_iva"));
                     if(!tipi.contains(jObject.getString("tipo")))
                         tipi.add(jObject.getString("tipo"));
                     if(!anni.contains(jObject.getString("anno")))
                         anni.add(jObject.getString("anno"));
-                    if(!aziende.contains(jObject.getString("aggiudicatario")))
-                        aziende.add(jObject.getString("aggiudicatario"));
                     if(!citta.contains(jObject.getString("citta")))
                         citta.add(jObject.getString("citta"));
                 //Log.d("FileDownloader", "Decompresso appalto: " + app.getCig()());
@@ -237,6 +249,7 @@ public class StartActivity extends AppCompatActivity {
             citta.add(0,"Tutte");
             dataAdapterTitolo.notifyDataSetChanged();
             dataAdapterAzienda.notifyDataSetChanged();
+            dataAdapterCodFiscIva.notifyDataSetChanged();
             dataAdapterTipo.notifyDataSetChanged();
             dataAdapterAnno.notifyDataSetChanged();
             dataAdapterCitta.notifyDataSetChanged();
@@ -254,6 +267,7 @@ public class StartActivity extends AppCompatActivity {
         try {
             outState.putString("inserted_titolo", textTitolo.getText().toString());
             outState.putString("inserted_azienda", textAzienda.getText().toString());
+            outState.putString("inserted_cod", textCodFiscIva.getText().toString());
             outState.putString("inserted_importoMin", textImportoMin.getText().toString());
             outState.putString("inserted_importoMax", textImportoMax.getText().toString());
             outState.putInt("inserted_anno", posAnno);
@@ -273,6 +287,7 @@ public class StartActivity extends AppCompatActivity {
             load();
             inserted_titolo = savedInstanceState.getString("inserted_titolo");
             inserted_azienda = savedInstanceState.getString("inserted_azienda");
+            inserted_cod = savedInstanceState.getString("inserted_cod");
             inserted_importoMin = savedInstanceState.getString("inserted_importoMin");
             inserted_importoMax = savedInstanceState.getString("inserted_importoMax");
             posAnno = savedInstanceState.getInt("inserted_anno");

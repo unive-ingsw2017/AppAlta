@@ -172,24 +172,32 @@ public class DataLoader extends AsyncTask<String, String, Void> {
                     String titolo="Ci sono appalti qui";
                     if(!inseriti.contains(visualizza.get(i).getCitta()))
                     try{
+                        //se è stata fatta una ricerca
                         if(search) {
                             titolo = visualizza.get(i).getTitolo();
-
-                            if (Double.parseDouble(importo) < 15000)
-                                googleMap.addMarker(new MarkerOptions().position(visualizza.get(i).getCoordinate()).title(titolo).icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_low_cost)));
-                            else if (Double.parseDouble(importo) > 100000)
-                                googleMap.addMarker(new MarkerOptions().position(visualizza.get(i).getCoordinate()).title(titolo).icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_high_cost)));
-                            else
-                                googleMap.addMarker(new MarkerOptions().position(visualizza.get(i).getCoordinate()).title(titolo).icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_default)));
+                            //se ha meno di due elementi (è una ricerca precisa)
+                            if(visualizza.size()<2) {
+                                if (Double.parseDouble(importo) < 15000)
+                                    googleMap.addMarker(new MarkerOptions().position(visualizza.get(i).getCoordinate()).title(titolo).snippet(visualizza.get(i).getCitta()).icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_low_cost)));
+                                else if (Double.parseDouble(importo) > 100000)
+                                    googleMap.addMarker(new MarkerOptions().position(visualizza.get(i).getCoordinate()).title(titolo).snippet(visualizza.get(i).getCitta()).icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_high_cost)));
+                                else
+                                    googleMap.addMarker(new MarkerOptions().position(visualizza.get(i).getCoordinate()).title(titolo).snippet(visualizza.get(i).getCitta()).icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_default)));
+                            }
+                            else {  //se invece è imprecisa (>2 elementi trovati)
+                                titolo="Ci sono appalti qui che contengono '"+search_string+"'";
+                                googleMap.addMarker(new MarkerOptions().position(visualizza.get(i).getCoordinate()).title(titolo).snippet(visualizza.get(i).getCitta()).icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_default)));
+                            }
                         }
-                        else
-                            googleMap.addMarker(new MarkerOptions().position(visualizza.get(i).getCoordinate()).title(titolo).icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_default)));
-
+                        else {  //se invece si devono visualizzare tutti
+                            googleMap.addMarker(new MarkerOptions().position(visualizza.get(i).getCoordinate()).title(titolo).snippet(visualizza.get(i).getCitta()).icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_default)));
+                        }
                         inseriti.add(visualizza.get(i).getCitta());
                     }
                     catch (Exception e){
                         Log.e("DataLoader", e.getMessage());
-                        googleMap.addMarker(new MarkerOptions().position(visualizza.get(i).getCoordinate()).title(titolo).icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_default)));
+                        //se crasha è per la conversione nei double, quindi ne aggiungo uno con icon default per chi ha importo non valido
+                        googleMap.addMarker(new MarkerOptions().position(visualizza.get(i).getCoordinate()).title(titolo).snippet(visualizza.get(i).getCitta()).icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_default)));
                     }
                     k++;
                 }
@@ -233,4 +241,11 @@ public class DataLoader extends AsyncTask<String, String, Void> {
         return trovati;
     }
 
+    public boolean isSearch() {
+        return search;
+    }
+
+    public String getSearch_string() {
+        return search_string;
+    }
 }

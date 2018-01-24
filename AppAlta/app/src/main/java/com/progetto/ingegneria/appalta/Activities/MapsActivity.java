@@ -171,23 +171,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             Log.e("MapsActivity onOptionsItemSelected()", e.getMessage());
                         }
                         break;
-                    /*
-                    case R.id.action_list:
-                        try {
-                            startActivity(new Intent(getApplicationContext(), ListActivity.class));
-                        } catch (Exception e) {
-                            Log.e("MapsActivity onOptionsItemSelected()", e.getMessage());
-                        }
-                        break;
 
-                    case R.id.action_list_company:
-                        try {
-                            startActivity(new Intent(getApplicationContext(), CompanyListActivity.class));
-                        } catch (Exception e) {
-                            Log.e("MapsActivity onOptionsItemSelected()", e.getMessage());
-                        }
-                        break;
-                    */
                     case R.id.action_info:
                         try {
                             AlertDialog alertDialog = new AlertDialog.Builder(MapsActivity.this).create();
@@ -286,17 +270,31 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
             public void onInfoWindowClick(Marker arg0) {
-                try {
-                    final Intent intent = new Intent(getApplicationContext(), SelectedItemActivity.class);
-                    intent.putExtra("titolo", arg0.getTitle());
-                    Log.e("MapsActivity premuto", arg0.getTitle());
-                    startActivity(intent);
-                }
-                catch(Exception e){
-                    Log.e("MapsActivity onInfoWindowClick", e.getMessage());
-                    final Toast toast = Toast.makeText(getApplicationContext(),R.string.error_data,Toast.LENGTH_LONG);
-                    toast.show();
-                }
+                if(loader.isSearch())
+                    try {
+                        final Intent intent = new Intent(getApplicationContext(), ListActivity.class);
+                        intent.putExtra("inserted_titolo", loader.getSearch_string());
+                        intent.putExtra("inserted_citta", arg0.getSnippet());
+                        Log.d("MapsActivity premuto", arg0.getTitle());
+                        startActivity(intent);
+                    }
+                    catch(Exception e){
+                        Log.e("MapsActivity onInfoWindowClick", e.getMessage());
+                        final Toast toast = Toast.makeText(getApplicationContext(),R.string.error_data,Toast.LENGTH_LONG);
+                        toast.show();
+                    }
+                else
+                    try {
+                        final Intent intent = new Intent(getApplicationContext(), ListActivity.class);
+                        intent.putExtra("inserted_citta", arg0.getSnippet());
+                        Log.d("MapsActivity premuto", arg0.getTitle());
+                        startActivity(intent);
+                    }
+                    catch(Exception e){
+                        Log.e("MapsActivity onInfoWindowClick", e.getMessage());
+                        final Toast toast = Toast.makeText(getApplicationContext(),R.string.error_data,Toast.LENGTH_LONG);
+                        toast.show();
+                    }
             }
         });
 
