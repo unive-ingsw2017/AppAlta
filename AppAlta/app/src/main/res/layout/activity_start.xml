@@ -165,7 +165,7 @@
 
     </ScrollView>
 
-    <android.support.design.widget.FloatingActionButton
+    <com.progetto.ingegneria.appalta.Classes.MovableFloatingActionButton
         android:id="@+id/fab"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -174,10 +174,14 @@
         android:layout_gravity="bottom|end"
         android:layout_marginBottom="@dimen/fab_margin"
         android:layout_marginEnd="@dimen/fab_margin"
+        android:clickable="true"
+        android:longClickable="true"
+        android:focusable="true"
         android:src="@drawable/ic_action_maps"
         app:backgroundTint="@color/primary"
         app:fabSize="normal"
         app:layout_anchor="@id/scrollview"
-        app:layout_anchorGravity="bottom|right|end" />
+        app:layout_anchorGravity="bottom|right|end"
+        />
 
 </android.support.design.widget.CoordinatorLayout>

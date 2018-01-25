@@ -33,6 +33,7 @@ import com.progetto.ingegneria.appalta.Adapters.EmptyRecyclerView;
 import com.progetto.ingegneria.appalta.Adapters.RecyclerViewAdapterAppalto;
 import com.progetto.ingegneria.appalta.Classes.Appalto;
 import com.progetto.ingegneria.appalta.Classes.DividerItemDecoration;
+import com.progetto.ingegneria.appalta.Classes.Filter;
 import com.progetto.ingegneria.appalta.Classes.JsonManager;
 import com.progetto.ingegneria.appalta.Classes.RecyclerItemListener;
 import com.progetto.ingegneria.appalta.R;
@@ -45,16 +46,18 @@ import java.util.HashMap;
 
 public class ListActivity extends AppCompatActivity {
 
-    private ArrayList<Appalto> appList = new ArrayList<>();
+    private ArrayList<Appalto> appList, fileRead;
     private RecyclerViewAdapterAppalto mAdapter;
-    private HashMap<Type, String> filters;
+    private Filter filter;
+    private boolean otherFilters;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
-        //setupUI(findViewById(R.id.main_content));
+        appList = new ArrayList<>();
+        fileRead = new ArrayList<>();
 
         EmptyRecyclerView recyclerView = (EmptyRecyclerView) findViewById(R.id.recycler_view);
         android.support.design.widget.FloatingActionButton fab = (android.support.design.widget.FloatingActionButton) findViewById(R.id.fab);
@@ -85,6 +88,7 @@ public class ListActivity extends AppCompatActivity {
                 try {
                     final Intent intent = new Intent(getApplicationContext(), SelectedItemActivity.class);
                     intent.putExtra("titolo", app.getTitolo());
+                    intent.putExtra("cig", app.getCig());
                     startActivity(intent);
                 }
                 catch(Exception e){
@@ -98,165 +102,194 @@ public class ListActivity extends AppCompatActivity {
 
             }
         }));
-
         mAdapter = new RecyclerViewAdapterAppalto(appList);
         recyclerView.setAdapter(mAdapter);
-        resetFilter();
+        initFilter();
+
         Bundle dati = getIntent().getExtras();
         if (dati != null) {
             String inserted_titolo = dati.getString("inserted_titolo");
             String inserted_azienda= dati.getString("inserted_azienda");
-            String inserted_cod= dati.getString("inserted_cod");
+            String inserted_cod = dati.getString("inserted_cod");
             String inserted_importoMin= dati.getString("inserted_importoMin");
             String inserted_importoMax= dati.getString("inserted_importoMax");
             String inserted_anno= dati.getString("inserted_anno");
             String inserted_tipo= dati.getString("inserted_tipo");
             String inserted_citta= dati.getString("inserted_citta");
-            if(TextUtils.isEmpty(inserted_titolo+inserted_azienda+inserted_importoMin+inserted_importoMax+inserted_anno+inserted_tipo+inserted_citta))
-                filters.put(Type.NONE,"yes");
-            else
-                filters.put(Type.NONE,"");
-            if(!TextUtils.isEmpty(inserted_titolo))
-                filters.put(Type.TITLE,inserted_titolo.toLowerCase());
-            if(!TextUtils.isEmpty(inserted_tipo))
-                filters.put(Type.TYPE,inserted_tipo.toLowerCase());
-            if(!TextUtils.isEmpty(inserted_cod))
-                filters.put(Type.COD_IVA,inserted_cod.toLowerCase());
-            if(!TextUtils.isEmpty(inserted_citta))
-                filters.put(Type.CITY,inserted_citta.toLowerCase());
-            if(!TextUtils.isEmpty(inserted_azienda))
-                filters.put(Type.COMPANY,inserted_azienda.toLowerCase());
-            if(!TextUtils.isEmpty(inserted_anno))
-                filters.put(Type.ANNO,inserted_anno);
-            if(!TextUtils.isEmpty(inserted_importoMin))
-                filters.put(Type.MIN,inserted_importoMin);
-            if(!TextUtils.isEmpty(inserted_importoMax))
-                filters.put(Type.MAX,inserted_importoMax);
+            if(TextUtils.isEmpty(inserted_titolo+inserted_azienda+inserted_cod+inserted_importoMin+inserted_importoMax+inserted_anno+inserted_tipo+inserted_citta)) {
+                filter.activate(Type.NONE.toString());
+                otherFilters =false;
+            }
+            else {
+                filter.deactivate(Type.NONE.toString());
+                otherFilters =true;
+                if(!TextUtils.isEmpty(inserted_titolo)) {
+                    filter.add(Type.TITLE.toString(), inserted_titolo, true);
+                }
+                if(!TextUtils.isEmpty(inserted_tipo)) {
+                    filter.add(Type.TYPE.toString(), inserted_tipo, true);
+                }
+                if(!TextUtils.isEmpty(inserted_cod)) {
+                    filter.add(Type.COD_IVA.toString(), inserted_cod, true);
+                }
+                if(!TextUtils.isEmpty(inserted_citta)) {
+                    filter.add(Type.CITY.toString(), inserted_citta, true);
+                }
+                if(!TextUtils.isEmpty(inserted_azienda)) {
+                    filter.add(Type.COMPANY.toString(), inserted_azienda, true);
+                }
+                if(!TextUtils.isEmpty(inserted_anno)) {
+                    filter.add(Type.ANNO.toString(), inserted_anno, true);
+                }
+                if(!TextUtils.isEmpty(inserted_importoMin)) {
+                    filter.add(Type.MIN.toString(), inserted_importoMin, true);
+                }
+                if(!TextUtils.isEmpty(inserted_importoMax)) {
+                    filter.add(Type.MAX.toString(), inserted_importoMax, true);
+                }
+            }
+        }
+        else {
+            filter.activate(Type.NONE.toString());
+            otherFilters =false;
         }
     }
 
-    private boolean prepareData() {
-            Appalto app;
-            JsonManager manager = new JsonManager(getApplicationContext());
-            appList.clear();
-            try {
-                JSONArray jArray = new JSONArray(manager.readFromFile("appalti_file.txt"));    // create JSON obj from string
-                for (int i = 0; i < jArray.length(); i++) {
-                    //DATI
-                    try {
-                        JSONObject jObject = jArray.getJSONObject(i);
-                        if(filter(jObject))
-                        {
-                            app = new Appalto();
-                            app.setCig(jObject.getString("cig"));
-                            app.setTitolo(jObject.getString("titolo"));
-                            app.setTipo(jObject.getString("tipo"));
-                            app.setAnno(jObject.getString("anno"));
-                            app.setAggiudicatario(jObject.getString("aggiudicatario"));
-                            app.setCod_fiscale_iva(jObject.getString("cod_fiscale_iva"));
-                            app.setImporto_aggiudicazione(jObject.getString("importo_aggiudicazione"));
-                            app.setDataInizio(jObject.getString("dataInizio"));
-                            app.setResponsabile(jObject.getString("responsabile"));
-                            app.setCitta(jObject.getString("citta"));
-                            JSONObject coordinate = jObject.getJSONObject("coordinate");
-                            app.setCoordinate(new LatLng(Double.parseDouble(coordinate.getString("latitude")), Double.parseDouble(coordinate.getString("longitude"))));
-                            appList.add(app);
+    private void prepareData() {
+        new Thread() {
+            @Override
+            public void run() {
+                try {
+                    // code runs in a thread
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Appalto app;
+                            //leggo da file la prima volta e memorizzo i dati
+                            if(fileRead.isEmpty()){
+                                try {
+                                    JsonManager manager = new JsonManager(getApplicationContext());
+                                    JSONArray jArray = new JSONArray(manager.readFromFile("appalti_file.txt"));    // create JSON obj from string
+                                    for (int i = 0; i < jArray.length(); i++) {
+                                        //DATI
+                                        try {
+                                            JSONObject jObject = jArray.getJSONObject(i);
+                                            app = new Appalto();
+                                            app.setCig(jObject.getString("cig"));
+                                            app.setTitolo(jObject.getString("titolo"));
+                                            app.setTipo(jObject.getString("tipo"));
+                                            app.setAnno(jObject.getString("anno"));
+                                            app.setAggiudicatario(jObject.getString("aggiudicatario"));
+                                            app.setCod_fiscale_iva(jObject.getString("cod_fiscale_iva"));
+                                            app.setImporto_aggiudicazione(jObject.getString("importo_aggiudicazione"));
+                                            app.setDataInizio(jObject.getString("dataInizio"));
+                                            app.setResponsabile(jObject.getString("responsabile"));
+                                            app.setCitta(jObject.getString("citta"));
+                                            JSONObject coordinate = jObject.getJSONObject("coordinate");
+                                            app.setCoordinate(new LatLng(Double.parseDouble(coordinate.getString("latitude")), Double.parseDouble(coordinate.getString("longitude"))));
+                                            fileRead.add(app);
+                                            //Log.d("Test", "aggiunto appalto: "+ app.getCig());
+                                        }
+                                        catch (Exception e) {
+                                            Log.e("ListActivity prepareData()1", e.getMessage());
+                                        }
+                                    } // End Loop
+                                }
+                                catch (Exception e) {
+                                    Log.e("ListActivity prepareData()2", e.getMessage());
+                                }
+                            }
+                            appList.clear();
+                            for (int i = 0; i < fileRead.size(); i++) {
+                                //DATI
+                                try {
+                                    if(filter(fileRead.get(i)))
+                                    {
+                                        appList.add(fileRead.get(i));
+                                    }
+                                }
+                                catch (Exception e) {
+                                    Log.e("ListActivity prepareData()3", e.getMessage());
+                                }
+                            } // End Loop
+                            mAdapter.notifyDataSetChanged();
                         }
-                        //Log.d("Test", "aggiunto appalto: "+ app.getCig());
-                    }
-                    catch (Exception e) {
-                        Log.e("ListActivity prepareData() for", e.getMessage());
-                    }
-                } // End Loop
-                mAdapter.notifyDataSetChanged();
-                return true;
+                    });
+                } catch (final Exception e) {
+                    Log.e("ListActivity thread",e.getMessage());
+                }
             }
-            catch (Exception e) {
-                Log.e("ListActivity prepareData()", e.getMessage());
-                final Toast toast = Toast.makeText(getApplicationContext(), "Errore nella lettura dati ", Toast.LENGTH_LONG);
-                toast.show();
-                return false;
-            }
+        }.start();
     }
 
-    private boolean filter(JSONObject obj){
-        for(int i=0; i<filters.size(); i++) {
-            try {
-                String  citta=obj.getString("citta").toLowerCase(),
-                        titolo=obj.getString("titolo").toLowerCase(),
-                        cig=obj.getString("cig").toLowerCase(),
-                        tipo=obj.getString("tipo").toLowerCase(),
-                        anno=obj.getString("anno"),
-                        aggiudicatario=obj.getString("aggiudicatario").toLowerCase(),
-                        cod_fiscale_iva=obj.getString("cod_fiscale_iva").toLowerCase(),
-                        importo_aggiudicazione=obj.getString("importo_aggiudicazione").toLowerCase(),
-                        dataInizio=obj.getString("dataInizio").toLowerCase(),
-                        responsabile=obj.getString("responsabile").toLowerCase();
+    private boolean filter(Appalto app){
+        HashMap<String,String> toCompare = new HashMap<>();
+        try {
+            toCompare.put(Type.CITY.toString(),app.getCitta().toLowerCase());
+            toCompare.put(Type.TITLE.toString(),app.getTitolo().toLowerCase());
+            toCompare.put(Type.CIG.toString(),app.getCig().toLowerCase());
+            toCompare.put(Type.TYPE.toString(),app.getTipo().toLowerCase());
+            toCompare.put(Type.ANNO.toString(),app.getAnno());
+            toCompare.put(Type.COMPANY.toString(),app.getAggiudicatario().toLowerCase());
+            toCompare.put(Type.COD_IVA.toString(),app.getCod_fiscale_iva().toLowerCase());
+            toCompare.put(Type.AMOUNT.toString(),app.getImporto_aggiudicazione());
+            toCompare.put(Type.DATE.toString(),app.getDataInizio());
+            toCompare.put(Type.ADMIN.toString(),app.getResponsabile().toLowerCase());
 
-                if (filters.get(Type.NONE).equalsIgnoreCase("yes")) {
-                    //Log.d("ListActivity","NONE true: "+filters.get(Type.NONE));
-                    return true;
+            for (Type t : Type.values()) {
+                switch (t){
+                    case ALL:
+                        if(!filter.checkAll(t.toString(),toCompare))
+                            return false;
+                        //Log.d("Test", filter.get(t.toString()));
+                        break;
+                    case NONE:
+                        if (filter.isActive(t.toString()))
+                            return true;
+                        break;
+                    case MAX:
+                        if(!filter.checkMax(t.toString(),toCompare.get(Type.AMOUNT.toString()))){
+                            //Log.d("ListActivity MAX false",""+(filter.get(t.toString())+"<"+toCompare.get(t.toString())));
+                            return false;
+                        }
+                        break;
+                    case MIN:
+                        if(!filter.checkMin(t.toString(),toCompare.get(Type.AMOUNT.toString()))){
+                            //Log.d("ListActivity MIN false", ""+filter.get(t.toString())+">"+toCompare.get(t.toString()));
+                            return false;
+                        }
+                        break;
+                    case COD_IVA:
+                        if(!filter.check(t.toString(),toCompare.get(t.toString()))){
+                            //Log.d("ListActivity "+t.toString()+" false", "'"+s+"'");
+                            return false;
+                        }
+                        //Log.d("Test "+t.toString(), toCompare.get(Type.CIG.toString())+": "+filter.get(t.toString())+" = "+toCompare.get(t.toString()));
+                        break;
+                    default:
+                        if(!filter.check(t.toString(),toCompare.get(t.toString()))){
+                            //Log.d("ListActivity "+t.toString()+" false", "'"+s+"'");
+                            return false;
+                        }
+                        break;
                 }
-                if ((!filters.get(Type.ALL).equalsIgnoreCase("")) && (!tipo.contains(filters.get(Type.ALL)) && !citta.contains(filters.get(Type.ALL)) && !titolo.contains(filters.get(Type.ALL)) && !cig.contains(filters.get(Type.ALL)) && !anno.contains(filters.get(Type.ALL)) && !aggiudicatario.contains(filters.get(Type.ALL)) && !cod_fiscale_iva.contains(filters.get(Type.ALL)) && !importo_aggiudicazione.contains(filters.get(Type.ALL))&& !dataInizio.contains(filters.get(Type.ALL)) && !responsabile.contains(filters.get(Type.ALL)) )) {
-                    //Log.d("ListActivity","ALL false");
-                    return false;
-                }
-                if (!filters.get(Type.CITY).equalsIgnoreCase("") && !citta.contains(filters.get(Type.CITY))) {
-                    //Log.d("ListActivity","CITY false: "+filters.get(Type.CITY)+" !contains "+citta);
-                    return false;
-                }
-                if (!filters.get(Type.TITLE).equalsIgnoreCase("") && !titolo.contains(filters.get(Type.TITLE))) {
-                    //Log.d("ListActivity","TITLE false: "+filters.get(Type.TITLE)+" !contains "+titolo);
-                    return false;
-                }
-                if (!filters.get(Type.TYPE).equalsIgnoreCase("") && !tipo.contains(filters.get(Type.TYPE))) {
-                    //Log.d("ListActivity","TYPE false: "+filters.get(Type.TYPE)+" !contains "+tipo);
-                    return false;
-                }
-                if (!filters.get(Type.COD_IVA).equalsIgnoreCase("") && !cod_fiscale_iva.contains(filters.get(Type.COD_IVA))) {
-                    //Log.d("ListActivity","COD_IVA false: "+filters.get(Type.COD_IVA)+" !contains "+cod_fiscale_iva);
-                    return false;
-                }
-                if (!filters.get(Type.COMPANY).equalsIgnoreCase("") && !aggiudicatario.contains(filters.get(Type.COMPANY))){
-                    //Log.d("ListActivity","COMPANY false: "+filters.get(Type.COMPANY)+" !contains "+aggiudicatario);
-                    return false;
-                }
-                if (!filters.get(Type.ANNO).equalsIgnoreCase("") && !anno.contains(filters.get(Type.ANNO))){
-                    //Log.d("ListActivity","ANNO false: "+filters.get(Type.ANNO)+" !contains "+anno);
-                    return false;
-                }
-                double importo = 0;
-                if(!TextUtils.isEmpty(importo_aggiudicazione) && !importo_aggiudicazione.contains("/"))
-                    importo = Double.parseDouble(importo_aggiudicazione.replaceAll(",","."));
-                if (!filters.get(Type.MIN).equalsIgnoreCase("") && (importo <= Double.parseDouble(filters.get(Type.MIN).replace(",",".")))) {
-                    //Log.d("ListActivity","MIN false: "+importo+" < "+filters.get(Type.MIN));
-                    return false;
-                }
-                if (!filters.get(Type.MAX).equalsIgnoreCase("") && (importo >= Double.parseDouble(filters.get(Type.MAX).replace(",",".")))) {
-                    //Log.d("ListActivity","MAX false: "+importo+" > "+filters.get(Type.MAX));
-                    return false;
-                }
-            }
-            catch (Exception e){
-                Log.e("ListActivity filter()", e.getMessage());
-                return false;
             }
         }
+        catch (Exception e){
+            Log.e("ListActivity filter()", e.getMessage());
+            return false;
+        }
+        //Log.d("Test true", toCompare.get(Type.CIG.toString()));
         return true;
     }
 
-    private void resetFilter(){
-        filters = new HashMap<>();
-        filters.put(Type.NONE,"yes");
-        filters.put(Type.CITY,"");
-        filters.put(Type.TITLE,"");
-        filters.put(Type.TYPE,"");
-        filters.put(Type.COD_IVA,"");
-        filters.put(Type.COMPANY,"");
-        filters.put(Type.ANNO,"");
-        filters.put(Type.MAX,"");
-        filters.put(Type.MIN,"");
-        filters.put(Type.ALL,"");
+    private void initFilter(){
+        filter = new Filter();
+        ArrayList<String> input = new ArrayList<>();
+        for(Type t : Type.values()){
+            input.add(t.toString());
+        }
+        filter.build(input);
     }
 
     private void alert(){
@@ -290,50 +323,50 @@ public class ListActivity extends AppCompatActivity {
         */
         final EditText text_all = (EditText) dialogView.findViewById(R.id.filter_search_alert);
         /*
-        if(TextUtils.isEmpty(filters.get(Type.CITY)))
+        if(TextUtils.isEmpty(filter.get(Type.CITY)))
             text_city.setHint(R.string.insert_citta);
         else
-            text_city.setText(filters.get(Type.CITY));
+            text_city.setText(filter.get(Type.CITY));
 
-        if(TextUtils.isEmpty(filters.get(Type.TITLE)))
+        if(TextUtils.isEmpty(filter.get(Type.TITLE)))
             text_title.setHint(R.string.insert_titolo);
         else
-            text_title.setText(filters.get(Type.TITLE));
+            text_title.setText(filter.get(Type.TITLE));
 
-        if(TextUtils.isEmpty(filters.get(Type.TYPE)))
+        if(TextUtils.isEmpty(filter.get(Type.TYPE)))
             text_type.setHint(R.string.insert_type);
         else
-            text_type.setText(filters.get(Type.TYPE));
+            text_type.setText(filter.get(Type.TYPE));
 
-        if(TextUtils.isEmpty(filters.get(Type.COD_IVA)))
+        if(TextUtils.isEmpty(filter.get(Type.COD_IVA)))
             text_cod_iva.setHint(R.string.insert_cod_iva);
         else
-            text_cod_iva.setText(filters.get(Type.COD_IVA));
+            text_cod_iva.setText(filter.get(Type.COD_IVA));
 
-        if(TextUtils.isEmpty(filters.get(Type.COMPANY)))
+        if(TextUtils.isEmpty(filter.get(Type.COMPANY)))
             text_company.setHint(R.string.insert_company);
         else
-            text_company.setText(filters.get(Type.COMPANY));
+            text_company.setText(filter.get(Type.COMPANY));
 
-        if(TextUtils.isEmpty(filters.get(Type.MAX)))
+        if(TextUtils.isEmpty(filter.get(Type.MAX)))
             text_max.setHint(R.string.insert_max);
         else
-            text_max.setText(filters.get(Type.MAX));
+            text_max.setText(filter.get(Type.MAX));
 
-        if(TextUtils.isEmpty(filters.get(Type.MIN)))
+        if(TextUtils.isEmpty(filter.get(Type.MIN)))
             text_min.setHint(R.string.insert_min);
         else
-            text_min.setText(filters.get(Type.MIN));
+            text_min.setText(filter.get(Type.MIN));
 
-        if(TextUtils.isEmpty(filters.get(Type.ANNO)))
+        if(TextUtils.isEmpty(filter.get(Type.ANNO)))
             text_anno.setHint(R.string.insert_anno);
         else
-            text_anno.setText(filters.get(Type.ANNO));
+            text_anno.setText(filter.get(Type.ANNO));
         */
-        if(TextUtils.isEmpty(filters.get(Type.ALL)))
+        if(TextUtils.isEmpty(filter.get(Type.ALL.toString())))
             text_all.setHint(R.string.insert_search);
         else
-            text_all.setText(filters.get(Type.ALL));
+            text_all.setText(filter.get(Type.ALL.toString()));
 
         dialogBuilder.setNegativeButton(R.string.cancel,
                 new DialogInterface.OnClickListener() {
@@ -347,32 +380,32 @@ public class ListActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog,int which) {
                         /*
                         if(!TextUtils.isEmpty(text_city.getText().toString()))
-                            filters.put(Type.CITY,text_city.getText().toString());
+                            filter.add(Type.CITY,text_city.getText().toString());
 
                         if(!TextUtils.isEmpty(text_title.getText().toString()))
-                            filters.put(Type.TITLE,text_title.getText().toString());
+                            filter.add(Type.TITLE,text_title.getText().toString());
 
                         if(!TextUtils.isEmpty(text_type.getText().toString()))
-                            filters.put(Type.TYPE,text_type.getText().toString());
+                            filter.add(Type.TYPE,text_type.getText().toString());
 
                         if(!TextUtils.isEmpty(text_cod_iva.getText().toString()))
-                            filters.put(Type.COD_IVA,text_cod_iva.getText().toString());
+                            filter.add(Type.COD_IVA,text_cod_iva.getText().toString());
 
                         if(!TextUtils.isEmpty(text_company.getText().toString()))
-                            filters.put(Type.COMPANY,text_company.getText().toString());
+                            filter.add(Type.COMPANY,text_company.getText().toString());
 
                         if(!TextUtils.isEmpty(text_max.getText().toString()))
-                            filters.put(Type.MAX,text_max.getText().toString());
+                            filter.add(Type.MAX,text_max.getText().toString());
 
                         if(!TextUtils.isEmpty(text_min.getText().toString()))
-                            filters.put(Type.MIN,text_min.getText().toString().toLowerCase());
+                            filter.add(Type.MIN,text_min.getText().toString());
 
                         if(!TextUtils.isEmpty(text_anno.getText().toString()))
-                            filters.put(Type.ANNO,text_anno.getText().toString().toLowerCase());
+                            filter.add(Type.ANNO,text_anno.getText().toString());
                         */
                         if(!TextUtils.isEmpty(text_all.getText().toString())) {
-                            filters.put(Type.NONE,"");
-                            filters.put(Type.ALL, text_all.getText().toString().toLowerCase());
+                            filter.deactivate(Type.NONE.toString());
+                            filter.add(Type.ALL.toString(), text_all.getText().toString(), true);
                         }
 
                         prepareData();
@@ -386,6 +419,8 @@ public class ListActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        if(fileRead==null)
+            fileRead = new ArrayList<>();
         prepareData();
     }
 
@@ -393,16 +428,20 @@ public class ListActivity extends AppCompatActivity {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         try {
-            outState.putString(Type.NONE.toString(), filters.get(Type.NONE));
-            outState.putString(Type.CITY.toString(), filters.get(Type.CITY));
-            outState.putString(Type.TITLE.toString(), filters.get(Type.TITLE));
-            outState.putString(Type.TYPE.toString(), filters.get(Type.TYPE));
-            outState.putString(Type.COD_IVA.toString(), filters.get(Type.COD_IVA));
-            outState.putString(Type.COMPANY.toString(), filters.get(Type.COMPANY));
-            outState.putString(Type.ANNO.toString(), filters.get(Type.ANNO));
-            outState.putString(Type.MAX.toString(), filters.get(Type.MAX));
-            outState.putString(Type.MIN.toString(), filters.get(Type.MIN));
-            outState.putString(Type.ALL.toString(), filters.get(Type.ALL));
+            outState.putBoolean("otherFilters", otherFilters);
+            if(filter.isActive(Type.NONE.toString()))
+                outState.putString(Type.NONE.toString(), "true");
+            else
+                outState.putString(Type.NONE.toString(), "false");
+            outState.putString(Type.CITY.toString(), filter.get(Type.CITY.toString()));
+            outState.putString(Type.TITLE.toString(), filter.get(Type.TITLE.toString()));
+            outState.putString(Type.TYPE.toString(), filter.get(Type.TYPE.toString()));
+            outState.putString(Type.COD_IVA.toString(), filter.get(Type.COD_IVA.toString()));
+            outState.putString(Type.COMPANY.toString(), filter.get(Type.COMPANY.toString()));
+            outState.putString(Type.ANNO.toString(), filter.get(Type.ANNO.toString()));
+            outState.putString(Type.MAX.toString(), filter.get(Type.MAX.toString()));
+            outState.putString(Type.MIN.toString(), filter.get(Type.MIN.toString()));
+            outState.putString(Type.ALL.toString(), filter.get(Type.ALL.toString()));
             Log.d("ListActivity onSaveInstanceState()", "filtro salvato");
         }
         catch (Exception e){
@@ -414,55 +453,60 @@ public class ListActivity extends AppCompatActivity {
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         try {
-            if (savedInstanceState.getString(Type.NONE.toString()) != null)
-                filters.put(Type.NONE, savedInstanceState.getString(Type.NONE.toString()));
-            else
-                filters.put(Type.NONE, "yes");
+            otherFilters = savedInstanceState.getBoolean("otherFilters");
 
-            if (savedInstanceState.getString(Type.CITY.toString()) != null)
-                filters.put(Type.CITY, savedInstanceState.getString(Type.CITY.toString()));
+            if (TextUtils.isEmpty(savedInstanceState.getString(Type.NONE.toString())))
+                filter.add(Type.NONE.toString(), "", true);
             else
-                filters.put(Type.CITY, "");
+                if("true".equalsIgnoreCase(savedInstanceState.getString(Type.NONE.toString())))
+                    filter.add(Type.NONE.toString(), "", true);
+                else
+                    filter.add(Type.NONE.toString(), "", false);
 
-            if (savedInstanceState.getString(Type.TITLE.toString()) != null)
-                filters.put(Type.TITLE, savedInstanceState.getString(Type.TITLE.toString()));
+            if (!TextUtils.isEmpty(savedInstanceState.getString(Type.CITY.toString())))
+                filter.add(Type.CITY.toString(), savedInstanceState.getString(Type.CITY.toString()), true);
             else
-                filters.put(Type.TITLE, "");
+                filter.add(Type.CITY.toString(), "", false);
 
-            if (savedInstanceState.getString(Type.TYPE.toString()) != null)
-                filters.put(Type.TYPE, savedInstanceState.getString(Type.TYPE.toString()));
+            if (!TextUtils.isEmpty(savedInstanceState.getString(Type.TITLE.toString())))
+                filter.add(Type.TITLE.toString(), savedInstanceState.getString(Type.TITLE.toString()), true);
             else
-                filters.put(Type.TYPE, "");
+                filter.add(Type.TITLE.toString(), "", false);
 
-            if (savedInstanceState.getString(Type.COD_IVA.toString()) != null)
-                filters.put(Type.COD_IVA, savedInstanceState.getString(Type.COD_IVA.toString()));
+            if (!TextUtils.isEmpty(savedInstanceState.getString(Type.TYPE.toString())))
+                filter.add(Type.TYPE.toString(), savedInstanceState.getString(Type.TYPE.toString()), true);
             else
-                filters.put(Type.COD_IVA, "");
+                filter.add(Type.TYPE.toString(), "", false);
 
-            if (savedInstanceState.getString(Type.COMPANY.toString()) != null)
-                filters.put(Type.COMPANY, savedInstanceState.getString(Type.COMPANY.toString()));
+            if (!TextUtils.isEmpty(savedInstanceState.getString(Type.COD_IVA.toString())))
+                filter.add(Type.COD_IVA.toString(), savedInstanceState.getString(Type.COD_IVA.toString()), true);
             else
-                filters.put(Type.COMPANY, "");
+                filter.add(Type.COD_IVA.toString(), "", false);
 
-            if (savedInstanceState.getString(Type.ANNO.toString()) != null)
-                filters.put(Type.ANNO, savedInstanceState.getString(Type.ANNO.toString()));
+            if (!TextUtils.isEmpty(savedInstanceState.getString(Type.COMPANY.toString())))
+                filter.add(Type.COMPANY.toString(), savedInstanceState.getString(Type.COMPANY.toString()), true);
             else
-                filters.put(Type.ANNO, "");
+                filter.add(Type.COMPANY.toString(), "", false);
 
-            if (savedInstanceState.getString(Type.MAX.toString()) != null)
-                filters.put(Type.MAX, savedInstanceState.getString(Type.MAX.toString()));
+            if (!TextUtils.isEmpty(savedInstanceState.getString(Type.ANNO.toString())))
+                filter.add(Type.ANNO.toString(), savedInstanceState.getString(Type.ANNO.toString()), true);
             else
-                filters.put(Type.MAX, "");
+                filter.add(Type.ANNO.toString(), "", false);
 
-            if (savedInstanceState.getString(Type.MIN.toString()) != null)
-                filters.put(Type.MIN, savedInstanceState.getString(Type.MIN.toString()));
+            if (!TextUtils.isEmpty(savedInstanceState.getString(Type.MAX.toString())))
+                filter.add(Type.MAX.toString(), savedInstanceState.getString(Type.MAX.toString()), true);
             else
-                filters.put(Type.MIN, "");
+                filter.add(Type.MAX.toString(), "", false);
 
-            if (savedInstanceState.getString(Type.ALL.toString()) != null)
-                filters.put(Type.ALL, savedInstanceState.getString(Type.ALL.toString()));
+            if (!TextUtils.isEmpty(savedInstanceState.getString(Type.MIN.toString())))
+                filter.add(Type.MIN.toString(), savedInstanceState.getString(Type.MIN.toString()), true);
             else
-                filters.put(Type.ALL, "");
+                filter.add(Type.MIN.toString(), "", false);
+
+            if (!TextUtils.isEmpty(savedInstanceState.getString(Type.ALL.toString())))
+                filter.add(Type.ALL.toString(), savedInstanceState.getString(Type.ALL.toString()), true);
+            else
+                filter.add(Type.ALL.toString(), "", false);
 
             Log.d("ListActivity onRestoreInstanceState()", "filtro caricato");
         }
@@ -491,10 +535,11 @@ public class ListActivity extends AppCompatActivity {
             case R.id.filter_delete:
                 final Toast toast = Toast.makeText(getApplicationContext(),R.string.filter_deleted,Toast.LENGTH_SHORT);
                 //resetto la ricerca globale
-                filters.put(Type.NONE,"yes");
-                filters.put(Type.ALL,"");
-                if(prepareData())
-                    toast.show();
+                if(!otherFilters)
+                    filter.activate(Type.NONE.toString());
+                filter.add(Type.ALL.toString(),"",false);
+                prepareData();
+                toast.show();
                 break;
             case R.id.filter_list:
                 final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(ListActivity.this);
@@ -513,50 +558,50 @@ public class ListActivity extends AppCompatActivity {
                 TextView view_min =(TextView) dialogView.findViewById(R.id.filter_min_alert);
                 TextView view_all = (TextView) dialogView.findViewById(R.id.filter_search_alert);
 
-                if(filters.get(Type.CITY).equalsIgnoreCase(""))
+                if(TextUtils.isEmpty(filter.get(Type.CITY.toString())))
                     view_city.setHint(R.string.filter_null);
                 else
-                    view_city.setText(filters.get(Type.CITY));
+                    view_city.setText(filter.get(Type.CITY.toString()));
 
-                if(filters.get(Type.TITLE).equalsIgnoreCase(""))
+                if(TextUtils.isEmpty(filter.get(Type.TITLE.toString())))
                     view_title.setHint(R.string.filter_null);
                 else
-                    view_title.setText(filters.get(Type.TITLE));
+                    view_title.setText(filter.get(Type.TITLE.toString()));
 
-                if(filters.get(Type.TYPE).equalsIgnoreCase(""))
+                if(TextUtils.isEmpty(filter.get(Type.TYPE.toString())))
                     view_type.setHint(R.string.filter_null);
                 else
-                    view_type.setText(filters.get(Type.TYPE));
+                    view_type.setText(filter.get(Type.TYPE.toString()));
 
-                if(filters.get(Type.COD_IVA).equalsIgnoreCase(""))
+                if(TextUtils.isEmpty(filter.get(Type.COD_IVA.toString())))
                     view_cod_iva.setHint(R.string.filter_null);
                 else
-                    view_cod_iva.setText(filters.get(Type.COD_IVA));
+                    view_cod_iva.setText(filter.get(Type.COD_IVA.toString()));
 
-                if(filters.get(Type.COMPANY).equalsIgnoreCase(""))
+                if(TextUtils.isEmpty(filter.get(Type.COMPANY.toString())))
                     view_company.setHint(R.string.filter_null);
                 else
-                    view_company.setText(filters.get(Type.COMPANY));
+                    view_company.setText(filter.get(Type.COMPANY.toString()));
 
-                if(filters.get(Type.MAX).equalsIgnoreCase(""))
+                if(TextUtils.isEmpty(filter.get(Type.MAX.toString())))
                     view_max.setHint(R.string.filter_null);
                 else
-                    view_max.setText(filters.get(Type.MAX));
+                    view_max.setText(filter.get(Type.MAX.toString()));
 
-                if(filters.get(Type.MIN).equalsIgnoreCase(""))
+                if(TextUtils.isEmpty(filter.get(Type.MIN.toString())))
                     view_min.setHint(R.string.filter_null);
                 else
-                    view_min.setText(filters.get(Type.MIN));
+                    view_min.setText(filter.get(Type.MIN.toString()));
 
-                if(filters.get(Type.ANNO).equalsIgnoreCase(""))
+                if(TextUtils.isEmpty(filter.get(Type.ANNO.toString())))
                     view_anno.setHint(R.string.filter_null);
                 else
-                    view_anno.setText(filters.get(Type.ANNO));
+                    view_anno.setText(filter.get(Type.ANNO.toString()));
 
-                if(filters.get(Type.ALL).equalsIgnoreCase(""))
+                if(TextUtils.isEmpty(filter.get(Type.ALL.toString())))
                     view_all.setHint(R.string.filter_null);
                 else
-                    view_all.setText(filters.get(Type.ALL));
+                    view_all.setText(filter.get(Type.ALL.toString()));
 
                 dialogBuilder.setPositiveButton(R.string.confirm,
                         new DialogInterface.OnClickListener() {
@@ -566,6 +611,7 @@ public class ListActivity extends AppCompatActivity {
                             }
                         });
                 dialogBuilder.show();
+                Log.d("ListActivity Filters:",filter.getFilters().toString());
                 break;
 
             case android.R.id.home:
@@ -579,12 +625,16 @@ public class ListActivity extends AppCompatActivity {
 
     public enum Type{
         NONE,
+        CIG,
         TITLE,
+        ADMIN,
         CITY,
         TYPE,
         COD_IVA,
         COMPANY,
         ANNO,
+        DATE,
+        AMOUNT,
         MAX,
         MIN,
         ALL,

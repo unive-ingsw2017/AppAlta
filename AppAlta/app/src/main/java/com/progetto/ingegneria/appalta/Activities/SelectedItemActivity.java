@@ -42,7 +42,8 @@ public class SelectedItemActivity extends ActionBarActivity {
         Bundle dati = getIntent().getExtras();
         if (dati != null) {
             String titolo = dati.getString("titolo");
-            load(titolo);
+            String cig = dati.getString("cig");
+            load(titolo, cig);
             setTextView();
         }
     }
@@ -70,7 +71,7 @@ public class SelectedItemActivity extends ActionBarActivity {
             t.setText(R.string.null_data);
     }
 
-    private void load(String titolo){
+    private void load(String titolo, String cig){
         try {
             app = new Appalto();
             JsonManager manager = new JsonManager(getApplicationContext());
@@ -79,7 +80,7 @@ public class SelectedItemActivity extends ActionBarActivity {
                 //DATI
                 JSONObject jObject = jArray.getJSONObject(i);
 
-                if(jObject.getString("titolo").equalsIgnoreCase(titolo)) {
+                if(jObject.getString("titolo").equalsIgnoreCase(titolo) && jObject.getString("cig").equalsIgnoreCase(cig)) {
                     app.setCig(jObject.getString("cig"));
                     app.setTitolo(jObject.getString("titolo"));
                     app.setTipo(jObject.getString("tipo"));

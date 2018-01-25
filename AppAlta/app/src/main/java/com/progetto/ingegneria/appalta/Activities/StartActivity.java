@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -26,6 +25,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.progetto.ingegneria.appalta.Classes.JsonManager;
+import com.progetto.ingegneria.appalta.Classes.MovableFloatingActionButton;
 import com.progetto.ingegneria.appalta.R;
 import com.progetto.ingegneria.appalta.Threads.DataSaver;
 
@@ -64,7 +64,7 @@ public class StartActivity extends AppCompatActivity {
         spinnerAnno = (Spinner) findViewById(R.id.anno);
         spinnerTipo = (Spinner) findViewById(R.id.tipo);
         spinnerCitta = (Spinner) findViewById(R.id.citta);
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        MovableFloatingActionButton fab = (MovableFloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -74,6 +74,13 @@ public class StartActivity extends AppCompatActivity {
             }
         });
 
+        fab.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                Log.e("Test","onLongClick");
+                return false;
+            }
+        });
         search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -173,7 +180,6 @@ public class StartActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 posAnno = position;
-                Log.d("Start Activity:","anni pos: "+position);
             }
 
             @Override
@@ -186,7 +192,6 @@ public class StartActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 posTipo = position;
-                Log.d("Start Activity:","tipi pos: "+position);
             }
 
             @Override
@@ -199,7 +204,6 @@ public class StartActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 posCitta = position;
-                Log.d("Start Activity:","tipi pos: "+position);
             }
 
             @Override
