@@ -1,170 +1,176 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/main_content"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    tools:context="com.progetto.ingegneria.appalta.Activities.StartActivity"
     android:clickable="true"
-    android:focusable="true">
+    android:focusable="true"
+    android:id="@+id/coordinator">
 
-    <ScrollView
-        android:id="@+id/scrollview"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingBottom="@dimen/activity_vertical_padding"
-        android:paddingTop="@dimen/activity_vertical_padding">
-
-        <LinearLayout
-            android:id="@+id/linear_layout"
+        android:id="@+id/main_content">
+        <ScrollView
+            android:id="@+id/scrollview"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:clickable="true"
-            android:focusable="true"
-            android:gravity="center_vertical|center_horizontal"
-            android:orientation="vertical"
-            android:paddingRight="@dimen/alert_horizontal_padding"
-            android:paddingLeft="@dimen/alert_horizontal_padding">
-
-
-            <AutoCompleteTextView
-                android:id="@+id/titolo"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/activity_vertical_padding"
-                android:hint="@string/filter_titolo"
-                android:maxLength="200"
-                android:textColorHint="@color/primary" />
-
-            <AutoCompleteTextView
-                android:id="@+id/company"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/activity_vertical_padding"
-                android:hint="@string/filter_company"
-                android:maxLength="100"
-                android:textColorHighlight="@color/primary"
-                android:textColorHint="@color/primary" />
-
-            <AutoCompleteTextView
-                android:id="@+id/codFisc"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/activity_vertical_padding"
-                android:hint="@string/filter_cod_iva"
-                android:maxLength="30"
-                android:textColorHighlight="@color/primary"
-                android:textColorHint="@color/primary" />
+            android:layout_height="match_parent"
+            android:paddingBottom="@dimen/activity_vertical_padding"
+            android:paddingTop="@dimen/activity_vertical_padding">
 
             <LinearLayout
+                android:id="@+id/layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center_vertical|center_horizontal"
                 android:orientation="vertical"
-                android:layout_marginBottom="@dimen/activity_vertical_padding">
+                android:paddingRight="@dimen/alert_horizontal_padding"
+                android:paddingLeft="@dimen/alert_horizontal_padding">
 
-                <TextView
+
+                <AutoCompleteTextView
+                    android:id="@+id/titolo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="8dip"
-                    android:layout_marginRight="8dip"
-                    android:text="@string/filter_anno"
-                    android:textColor="@color/primary"
-                    android:textStyle="bold" />
-
-                <Spinner
-                    android:id="@+id/anno"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_marginLeft="8dip"
-                    android:layout_marginRight="8dip"
-                    android:layout_weight="1.5"
-                    android:hint="@string/filter_anno" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginBottom="@dimen/activity_vertical_padding">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="8dip"
-                    android:layout_marginRight="8dip"
-                    android:text="@string/filter_citta"
-                    android:textColor="@color/primary"
-                    android:textStyle="bold" />
-
-                <Spinner
-                    android:id="@+id/citta"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_marginLeft="8dip"
-                    android:layout_marginRight="8dip"
-                    android:layout_weight="1.5"
-                    android:hint="@string/filter_citta" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="8dip"
-                    android:layout_marginRight="8dip"
-                    android:text="@string/filter_type"
-                    android:textColor="?attr/colorPrimary"
-                    android:textStyle="bold" />
-
-                <Spinner
-                    android:id="@+id/tipo"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
                     android:layout_marginBottom="@dimen/activity_vertical_padding"
-                    android:layout_marginLeft="8dip"
-                    android:layout_marginRight="8dip"
-                    android:layout_weight="1.5"
-                    android:hint="@string/filter_type" />
+                    android:hint="@string/filter_titolo"
+                    android:maxLength="200"
+                    android:textColorHint="@color/primary" />
+
+                <AutoCompleteTextView
+                    android:id="@+id/company"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/activity_vertical_padding"
+                    android:hint="@string/filter_company"
+                    android:maxLength="100"
+                    android:textColorHighlight="@color/primary"
+                    android:textColorHint="@color/primary" />
+
+                <AutoCompleteTextView
+                    android:id="@+id/codFisc"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/activity_vertical_padding"
+                    android:hint="@string/filter_cod_iva"
+                    android:maxLength="30"
+                    android:textColorHighlight="@color/primary"
+                    android:textColorHint="@color/primary" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginBottom="@dimen/activity_vertical_padding">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="8dip"
+                        android:layout_marginRight="8dip"
+                        android:text="@string/filter_anno"
+                        android:textColor="@color/primary"
+                        android:textStyle="bold" />
+
+                    <Spinner
+                        android:id="@+id/anno"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_marginLeft="8dip"
+                        android:layout_marginRight="8dip"
+                        android:layout_weight="1.5"
+                        android:hint="@string/filter_anno" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginBottom="@dimen/activity_vertical_padding">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="8dip"
+                        android:layout_marginRight="8dip"
+                        android:text="@string/filter_citta"
+                        android:textColor="@color/primary"
+                        android:textStyle="bold" />
+
+                    <Spinner
+                        android:id="@+id/citta"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_marginLeft="8dip"
+                        android:layout_marginRight="8dip"
+                        android:layout_weight="1.5"
+                        android:hint="@string/filter_citta" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="8dip"
+                        android:layout_marginRight="8dip"
+                        android:text="@string/filter_type"
+                        android:textColor="?attr/colorPrimary"
+                        android:textStyle="bold" />
+
+                    <Spinner
+                        android:id="@+id/tipo"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_marginBottom="@dimen/activity_vertical_padding"
+                        android:layout_marginLeft="8dip"
+                        android:layout_marginRight="8dip"
+                        android:layout_weight="1.5"
+                        android:hint="@string/filter_type" />
+                </LinearLayout>
+
+                <EditText
+                    android:id="@+id/importoMax"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/activity_vertical_padding"
+                    android:ems="10"
+                    android:hint="@string/filter_max"
+                    android:inputType="numberDecimal"
+                    android:maxLength="15"
+                    android:textColorHint="@color/primary" />
+
+                <EditText
+                    android:id="@+id/importoMin"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/activity_vertical_padding"
+                    android:ems="10"
+                    android:hint="@string/filter_min"
+                    android:inputType="numberDecimal"
+                    android:maxLength="15"
+                    android:textColorHint="@color/primary" />
+
+                <Button
+                    android:id="@+id/button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@color/primary"
+                    android:gravity="center"
+                    android:text="@string/searh_location"
+                    android:textColor="@color/background" />
+
             </LinearLayout>
-
-            <EditText
-                android:id="@+id/importoMax"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/activity_vertical_padding"
-                android:ems="10"
-                android:hint="@string/filter_max"
-                android:inputType="numberDecimal"
-                android:maxLength="15"
-                android:textColorHint="@color/primary" />
-
-            <EditText
-                android:id="@+id/importoMin"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/activity_vertical_padding"
-                android:ems="10"
-                android:hint="@string/filter_min"
-                android:inputType="numberDecimal"
-                android:maxLength="15"
-                android:textColorHint="@color/primary" />
-
-            <Button
-                android:id="@+id/button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@color/primary"
-                android:gravity="center"
-                android:text="@string/searh_location"
-                android:textColor="@color/background" />
-
-        </LinearLayout>
-
-    </ScrollView>
-
+        </ScrollView>
+    </RelativeLayout>
     <com.progetto.ingegneria.appalta.Classes.MovableFloatingActionButton
         android:id="@+id/fab"
         android:layout_width="match_parent"
@@ -174,13 +180,15 @@
         android:layout_gravity="bottom|end"
         android:layout_marginBottom="@dimen/fab_margin"
         android:layout_marginEnd="@dimen/fab_margin"
-        android:clickable="true"
         android:longClickable="true"
+        android:clickable="true"
         android:focusable="true"
         android:src="@drawable/ic_action_maps"
         app:backgroundTint="@color/primary"
         app:fabSize="normal"
-        app:layout_anchor="@id/scrollview"
+        android:scaleX="1.1"
+        android:scaleY="1.1"
+        app:layout_anchor="@id/main_content"
         app:layout_anchorGravity="bottom|right|end"
         />
 

@@ -22,35 +22,35 @@
     <item android:id="@+id/action_settings"
           android:icon="@drawable/ic_action_optionsettings"
           android:title="@string/action_settings"
-          android:showAsAction="ifRoom|withText"
+          android:showAsAction="ifRoom"
           tools:ignore="AppCompatResource"
           android:orderInCategory="1"/>
 
     <item android:id="@+id/action_refresh"
         android:icon="@drawable/ic_action_refresh"
         android:title="@string/action_refresh"
-        android:showAsAction="ifRoom|withText"
+        android:showAsAction="ifRoom"
         tools:ignore="AppCompatResource"
         android:orderInCategory="2" />
 
     <item android:id="@+id/action_view"
-        android:icon="@drawable/ic_action_view"
+        android:icon="@drawable/ic_action_list_company"
         android:title="@string/action_view"
-        android:showAsAction="ifRoom|withText"
+        android:showAsAction="ifRoom"
         tools:ignore="AppCompatResource"
         android:orderInCategory="3" />
 
     <item android:id="@+id/action_delete"
         android:icon="@drawable/ic_action_delete"
         android:title="@string/action_delete"
-        android:showAsAction="ifRoom|withText"
+        android:showAsAction="ifRoom"
         tools:ignore="AppCompatResource"
         android:orderInCategory="6" />
 
     <item android:id="@+id/action_info"
         android:icon="@drawable/ic_action_info"
         android:title="@string/action_info"
-        android:showAsAction="ifRoom|withText"
+        android:showAsAction="ifRoom"
         tools:ignore="AppCompatResource"
         android:orderInCategory="7" />
 

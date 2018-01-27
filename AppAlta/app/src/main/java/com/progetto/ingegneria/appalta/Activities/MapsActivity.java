@@ -7,7 +7,7 @@ import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -27,6 +27,7 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.progetto.ingegneria.appalta.Classes.Appalto;
+import com.progetto.ingegneria.appalta.Classes.MovableFloatingActionButton;
 import com.progetto.ingegneria.appalta.Classes.Suggestion;
 import com.progetto.ingegneria.appalta.R;
 import com.progetto.ingegneria.appalta.Threads.DataLoader;
@@ -52,7 +53,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        MovableFloatingActionButton fab = (MovableFloatingActionButton) findViewById(R.id.fab);
+        CoordinatorLayout.LayoutParams lp  = (CoordinatorLayout.LayoutParams) fab.getLayoutParams();
+        fab.setCoordinatorLayout(lp);
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

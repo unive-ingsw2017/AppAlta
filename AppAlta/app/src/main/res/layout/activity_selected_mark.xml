@@ -272,7 +272,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="2"
                 android:clickable="true"
-                android:paddingLeft="?attr/listPreferredItemPaddingLeft"
+                android:paddingStart="?attr/listPreferredItemPaddingLeft"
                 android:focusable="true" />
         </LinearLayout>
 

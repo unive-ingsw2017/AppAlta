@@ -1,11 +1,16 @@
 package com.progetto.ingegneria.appalta.Classes;
 
 import android.content.Context;
+import android.content.res.Resources;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+
+import com.progetto.ingegneria.appalta.R;
 
 
 /**
@@ -18,6 +23,8 @@ public class MovableFloatingActionButton extends FloatingActionButton implements
 
     private float downRawX, downRawY;
     private float dX, dY;
+
+    private CoordinatorLayout.LayoutParams coordinatorLayout;
 
     public MovableFloatingActionButton(Context context) {
         super(context);
@@ -34,66 +41,120 @@ public class MovableFloatingActionButton extends FloatingActionButton implements
         init();
     }
 
+
     private void init() {
         setOnTouchListener(this);
     }
 
     @Override
-    public boolean onTouch(View view, MotionEvent motionEvent){
-        Log.e("Test","onTouch");
-        int action = motionEvent.getAction();
-        if (action == MotionEvent.ACTION_DOWN) {
+    public boolean onTouch(View view, MotionEvent motionEvent) {
+        View viewParent;
+        switch (motionEvent.getActionMasked()) {
+            case MotionEvent.ACTION_DOWN:
+                Log.d("MovableFAB", "ACTION_DOWN");
+                downRawX = motionEvent.getRawX();
+                downRawY = motionEvent.getRawY();
+                dX = view.getX() - downRawX;
+                dY = view.getY() - downRawY;
 
-            downRawX = motionEvent.getRawX();
-            downRawY = motionEvent.getRawY();
-            dX = view.getX() - downRawX;
-            dY = view.getY() - downRawY;
+                return true; // Consumed
 
-            return true; // Consumed
+            case MotionEvent.ACTION_MOVE:
+                int viewWidth = view.getWidth();
+                int viewHeight = view.getHeight();
+
+                viewParent = (View) view.getParent();
+                int parentWidth = viewParent.getWidth();
+                int parentHeight = viewParent.getHeight();
+
+                float newX = motionEvent.getRawX() + dX;
+                newX = Math.max(0, newX); // Don't allow the FAB past the left hand side of the parent
+                newX = Math.min(parentWidth - viewWidth, newX); // Don't allow the FAB past the right hand side of the parent
+
+                float newY = motionEvent.getRawY() + dY;
+                newY = Math.max(0, newY); // Don't allow the FAB past the top of the parent
+                newY = Math.min(parentHeight - viewHeight, newY); // Don't allow the FAB past the bottom of the parent
+
+                view.animate()
+                        .x(newX)
+                        .y(newY)
+                        .setDuration(0)
+                        .start();
+                return true; // Consumed
+
+            case MotionEvent.ACTION_UP:
+
+                float upRawX = motionEvent.getRawX();
+                float upRawY = motionEvent.getRawY();
+
+                float upDX = upRawX - downRawX;
+                float upDY = upRawY - downRawY;
+
+                View viewParent2 = (View) view.getParent();
+                float borderY,borderX;
+                float oldX=view.getX(), oldY=view.getY();
+                float finalX,finalY;
+
+                borderY = Math.min(view.getY()-viewParent2.getTop(),viewParent2.getBottom()-view.getY());
+                borderX = Math.min(view.getX()-viewParent2.getLeft(),viewParent2.getRight()-view.getX());
+                //Log.d("MovableFAB", "right: "+viewParent2.getRight()+" left: "+viewParent2.getLeft());
+                DisplayMetrics metrics = Resources.getSystem().getDisplayMetrics();
+                float px=0, dp= getResources().getDimension(R.dimen.fab_margin);
+
+                //controllo se è più vicino all'asse Y o X
+                if(borderX>borderY) {
+                    if(view.getY()>viewParent2.getHeight()/2) { //view vicina a Bottom
+                        finalY = viewParent2.getBottom() - view.getHeight();
+                        finalY = Math.min(viewParent2.getHeight() - view.getHeight(), finalY) - dp; // Don't allow the FAB past the bottom of the parent
+                    }
+                    else {  //view vicina a Top
+                        finalY = viewParent2.getTop();
+                        finalY = Math.max(0, finalY) + dp; // Don't allow the FAB past the top of the parent
+                    }
+                    //controllo che anche la x non sia oltre il margine
+                    finalX=oldX;
+                    if(view.getX()+viewParent2.getLeft()<dp)
+                        finalX=viewParent2.getLeft()+dp;
+                    if(viewParent2.getRight()-view.getX()-view.getWidth()<dp)
+                        finalX=viewParent2.getRight()- view.getWidth()-dp;
+                }
+                else {  //view vicina a Right
+                    if(view.getX()>viewParent2.getWidth()/2) {
+                        finalX = viewParent2.getRight() - view.getWidth();
+                        finalX = Math.max(0, finalX) - dp; // Don't allow the FAB past the left hand side of the parent
+                    }
+                    else {  //view vicina a Left
+                        finalX = viewParent2.getLeft();
+                        finalX = Math.min(viewParent2.getWidth() - view.getWidth(), finalX) + dp; // Don't allow the FAB past the right hand side of the parent
+                    }
+                    //controllo che anche la y non sia oltre il margine
+                    finalY=oldY;
+                    if(view.getY()+viewParent2.getTop()<dp)
+                        finalY=viewParent2.getTop()+dp;
+                    if(viewParent2.getBottom()-view.getY()-view.getHeight()<dp)
+                        finalY=viewParent2.getBottom()-view.getHeight()-dp;
+                }
+
+                view.animate()
+                        .x(finalX)
+                        .y(finalY)
+                        .setDuration(400)
+                        .start();
+
+                Log.d("MovableFAB", "ACTION_UP");
+                return !(Math.abs(upDX) < CLICK_DRAG_TOLERANCE && Math.abs(upDY) < CLICK_DRAG_TOLERANCE) || performClick();
+                // A drag consumed
+            default:
+                return super.onTouchEvent(motionEvent);
+            }
 
         }
-        else if (action == MotionEvent.ACTION_MOVE) {
 
-            int viewWidth = view.getWidth();
-            int viewHeight = view.getHeight();
-
-            View viewParent = (View)view.getParent();
-            int parentWidth = viewParent.getWidth();
-            int parentHeight = viewParent.getHeight();
-
-            float newX = motionEvent.getRawX() + dX;
-            newX = Math.max(0, newX); // Don't allow the FAB past the left hand side of the parent
-            newX = Math.min(parentWidth - viewWidth, newX); // Don't allow the FAB past the right hand side of the parent
-
-            float newY = motionEvent.getRawY() + dY;
-            newY = Math.max(0, newY); // Don't allow the FAB past the top of the parent
-            newY = Math.min(parentHeight - viewHeight, newY); // Don't allow the FAB past the bottom of the parent
-
-            view.animate()
-                    .x(newX)
-                    .y(newY)
-                    .setDuration(0)
-                    .start();
-
-            return true; // Consumed
-
-        }
-        else if (action == MotionEvent.ACTION_UP) {
-
-            float upRawX = motionEvent.getRawX();
-            float upRawY = motionEvent.getRawY();
-
-            float upDX = upRawX - downRawX;
-            float upDY = upRawY - downRawY;
-
-            // A click
-            return !(Math.abs(upDX) < CLICK_DRAG_TOLERANCE && Math.abs(upDY) < CLICK_DRAG_TOLERANCE) || performClick();
-        // A drag consumed
-        }
-        else {
-            return super.onTouchEvent(motionEvent);
-        }
-
+    public CoordinatorLayout.LayoutParams getCoordinatorLayout() {
+        return coordinatorLayout;
     }
 
+    public void setCoordinatorLayout(CoordinatorLayout.LayoutParams coordinatorLayout) {
+        this.coordinatorLayout = coordinatorLayout;
+    }
 }

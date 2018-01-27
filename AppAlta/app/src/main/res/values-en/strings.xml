@@ -67,7 +67,6 @@
     <string name="insert_company">Insert a company</string>
     <string name="title_activity_company_list">Companies List</string>
     <string name="insert_anno">Insert a year</string>
-    <string name="title_activity_start">StartActivity</string>
     <string name="filter_anno">Filter by year</string>
     <string name="filter_max">Max cost</string>
     <string name="filter_min">Min cost</string>
@@ -75,4 +74,6 @@
     <string name="insert_max">Insert max amount</string>
     <string name="insert_min">Insert min amount</string>
     <string name="search_list">Filter</string>
+    <string name="action_stats">Stats</string>
+    <string name="confirm_download">Confirm data download</string>
 </resources>

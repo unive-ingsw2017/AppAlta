@@ -12,19 +12,18 @@ import java.util.Map;
 
 public class Filter {
     private HashMap<String, String> filters;
-    private ArrayList<String> keys;
     private HashMap<String, Boolean> active;
 
     public Filter() {
         filters = new HashMap<>();
         active = new HashMap<>();
-        keys = new ArrayList<>();
     }
 
     public void setAll(String value){
-        for(int i=0; i<keys.size(); i++) {
-            filters.put(keys.get(i), value);
-            active.put(keys.get(i), false);
+        HashMap<String, String> copy = new HashMap<>(filters);
+        for(Map.Entry<String, String> entry : copy.entrySet()) {
+            filters.put(entry.getKey(), value);
+            active.put(entry.getKey(), false);
         }
     }
 
@@ -32,7 +31,6 @@ public class Filter {
         for (String s : init) {
             filters.put(s, "");
             active.put(s, false);
-            keys.add(s);
         }
     }
 
@@ -40,22 +38,20 @@ public class Filter {
         return filters.size();
     }
 
-    public void remove(String key){
-        filters.remove(key);
-        keys.remove(key);
+    public String remove(String key){
+        String removed = filters.remove(key);
         active.remove(key);
+        return removed;
     }
 
     public void clearAll(){
         filters.clear();
-        keys.clear();
         active.clear();
     }
 
     public void add(String key, String value, Boolean isActive){
         filters.put(key,value.toLowerCase());
         active.put(key, isActive);
-        keys.add(key);
     }
 
     public void activate(String key){

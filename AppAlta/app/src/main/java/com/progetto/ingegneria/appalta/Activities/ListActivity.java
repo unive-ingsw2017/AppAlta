@@ -520,7 +520,7 @@ public class ListActivity extends AppCompatActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         //getMenuInflater().inflate(R.menu.start_menu, menu);
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_list, menu);
+        inflater.inflate(R.menu.list_menu, menu);
         return super.onCreateOptionsMenu(menu);
     }
 

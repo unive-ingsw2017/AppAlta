@@ -5,6 +5,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -51,7 +53,7 @@ public class StartActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
-        setupUI(findViewById(R.id.main_content));
+        setupUI(findViewById(R.id.coordinator));
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         saver = new DataSaver(StartActivity.this, getApplicationContext());
 
@@ -64,7 +66,11 @@ public class StartActivity extends AppCompatActivity {
         spinnerAnno = (Spinner) findViewById(R.id.anno);
         spinnerTipo = (Spinner) findViewById(R.id.tipo);
         spinnerCitta = (Spinner) findViewById(R.id.citta);
+
         MovableFloatingActionButton fab = (MovableFloatingActionButton) findViewById(R.id.fab);
+        CoordinatorLayout.LayoutParams lp  = (CoordinatorLayout.LayoutParams) fab.getLayoutParams();
+        fab.setCoordinatorLayout(lp);
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -74,13 +80,6 @@ public class StartActivity extends AppCompatActivity {
             }
         });
 
-        fab.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                Log.e("Test","onLongClick");
-                return false;
-            }
-        });
         search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -141,10 +140,10 @@ public class StartActivity extends AppCompatActivity {
         load();
     }
 
-    public void setupUI(View view) {
+    private void setupUI(View view) {
 
         // Set up touch listener for non-text box views to hide keyboard.
-        if (!(view instanceof EditText)) {
+        if (!(view instanceof EditText) && !(view instanceof FloatingActionButton)) {
             view.setOnTouchListener(new View.OnTouchListener() {
                 public boolean onTouch(View v, MotionEvent event) {
                     hideSoftKeyboard(StartActivity.this);
@@ -162,7 +161,7 @@ public class StartActivity extends AppCompatActivity {
         }
     }
 
-    public static void hideSoftKeyboard(Activity activity) {
+    private static void hideSoftKeyboard(Activity activity) {
         InputMethodManager inputMethodManager =
                 (InputMethodManager) activity.getSystemService(
                         Activity.INPUT_METHOD_SERVICE);
@@ -170,12 +169,12 @@ public class StartActivity extends AppCompatActivity {
                 activity.getCurrentFocus().getWindowToken(), 0);
     }
 
-    public void addItemsOnSpinner(ArrayAdapter<String> dataAdapter, Spinner spinner) {
+    private void addItemsOnSpinner(ArrayAdapter<String> dataAdapter, Spinner spinner) {
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(dataAdapter);
     }
 
-    public void addListenerOnSpinnerItemSelection() {
+    private void addListenerOnSpinnerItemSelection() {
         spinnerAnno.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -311,6 +310,7 @@ public class StartActivity extends AppCompatActivity {
         //getMenuInflater().inflate(R.menu.start_menu, menu);
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.start_menu, menu);
+        menu.findItem(R.id.action_stats).setVisible(false);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -324,7 +324,7 @@ public class StartActivity extends AppCompatActivity {
                 try {
                     if (saver.getStatus() != AsyncTask.Status.RUNNING) {
                         AlertDialog.Builder builder = new AlertDialog.Builder(StartActivity.this);
-                        builder.setTitle(R.string.confirm);
+                        builder.setTitle(R.string.confirm_download);
                         builder.setMessage(R.string.confirm2);
 
                         builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
@@ -351,6 +351,11 @@ public class StartActivity extends AppCompatActivity {
                 } catch (Exception e) {
                     Log.e("MapsActivity onOptionsItemSelected()", e.getMessage());
                 }
+                break;
+            case R.id.action_stats:
+                item.setVisible(false);
+                //Intent intent = new Intent(StartActivity.this,StatsActivity.class);
+                //startActivity(intent);
                 break;
         }
         return super.onOptionsItemSelected(item);

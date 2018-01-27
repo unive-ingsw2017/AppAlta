@@ -11,11 +11,14 @@
     <string name="action_delete">Elimina Markers</string>
     <string name="action_list">Visualizza la lista di Appalti</string>
     <string name="action_list_company">Visualizza la lista di Aziende</string>
+    <string name="action_stats">Statistiche</string>
+    <string name="action_optionsettings">Opzioni</string>
+
     <string name="searh_location">Cerca</string>
     <string name="confirm">Conferma</string>
+    <string name="confirm_download">Conferma lo scaricamento dei dati</string>
     <string name="cancel">Annulla</string>
     <string name="confirm2">Sei Sicuro?</string>
-    <string name="action_optionsettings">Opzioni</string>
     <string name="yes">Si</string>
     <string name="no">No</string>
     <string name="markers_multiple">Ci sono appalti in questa città</string>
@@ -84,7 +87,7 @@
     <string name="search_list">Filtra Appalti</string>
 
     <!-- Activity Start -->
-    <string name="title_activity_start">StartActivity</string>
+    <string name="title_activity_start" translatable="false">StartActivity</string>
 
     <!--Errori -->
     <string name="error_connection">Errore, hai controllato la tua connessione?</string>
@@ -96,6 +99,7 @@
     <string name="MAP_TYPE_NORMAL">Normale</string>
     <string name="MAP_TYPE_SATELLITE">Satellite</string>
     <string name="MAP_TYPE_TERRAIN">Terreno</string>
+    <string name="title_activity_stats" translatable="false">StatsActivity</string>
 
 
 </resources>
