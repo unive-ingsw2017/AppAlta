@@ -7,8 +7,11 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.NavUtils;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -23,6 +26,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -48,6 +52,7 @@ public class StartActivity extends AppCompatActivity {
     private int posAnno, posTipo, posCitta;
     private ArrayAdapter<String> dataAdapterTitolo, dataAdapterAzienda, dataAdapterCodFiscIva, dataAdapterTipo, dataAdapterAnno, dataAdapterCitta;
     private DataSaver saver;
+    private String hidden_city;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +63,7 @@ public class StartActivity extends AppCompatActivity {
         saver = new DataSaver(StartActivity.this, getApplicationContext());
 
         Button search = (Button) findViewById(R.id.button);
+        LinearLayout layoutCity = (LinearLayout) findViewById(R.id.layout_city);
         textTitolo = (AutoCompleteTextView) findViewById(R.id.titolo);
         textAzienda = (AutoCompleteTextView) findViewById(R.id.company);
         textCodFiscIva = (AutoCompleteTextView) findViewById(R.id.codFisc);
@@ -91,7 +97,10 @@ public class StartActivity extends AppCompatActivity {
                 inserted_importoMax = textImportoMax.getText().toString();
                 inserted_anno = anni.get(posAnno);
                 inserted_tipo = tipi.get(posTipo);
-                inserted_citta = citta.get(posCitta);
+                if(TextUtils.isEmpty(hidden_city))
+                    inserted_citta = citta.get(posCitta);
+                else
+                    inserted_citta = hidden_city;
                 if(inserted_anno.equalsIgnoreCase("tutti"))
                     inserted_anno="";
                 if(inserted_tipo.equalsIgnoreCase("tutti"))
@@ -109,6 +118,20 @@ public class StartActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        Bundle dati = getIntent().getExtras();
+        if (dati != null) {
+            hidden_city = dati.getString("inserted_citta");
+            if(!TextUtils.isEmpty(hidden_city)) {
+                layoutCity.setVisibility(LinearLayout.GONE);
+                fab.setVisibility(FloatingActionButton.GONE);
+                final ActionBar actionBar = getSupportActionBar();
+                assert actionBar != null;
+                actionBar.setDisplayHomeAsUpEnabled(true);
+            }
+        }
+        else
+            hidden_city = "";
 
         //init arraylist
         titoli = new ArrayList<>();
@@ -259,7 +282,7 @@ public class StartActivity extends AppCompatActivity {
         }
         catch (Exception e){
             Log.e("StartActivity load", e.getMessage());
-            final Toast toast = Toast.makeText(getApplicationContext(),"Errore nei Dati",Toast.LENGTH_LONG);
+            final Toast toast = Toast.makeText(getApplicationContext(),"Error",Toast.LENGTH_LONG);
             toast.show();
         }
     }
@@ -310,7 +333,7 @@ public class StartActivity extends AppCompatActivity {
         //getMenuInflater().inflate(R.menu.start_menu, menu);
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.start_menu, menu);
-        menu.findItem(R.id.action_stats).setVisible(false);
+        //menu.findItem(R.id.action_stats).setVisible(false);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -354,10 +377,15 @@ public class StartActivity extends AppCompatActivity {
                 break;
             case R.id.action_stats:
                 item.setVisible(false);
-                //Intent intent = new Intent(StartActivity.this,StatsActivity.class);
+                Intent intent = new Intent(StartActivity.this,StatsActivity.class);
                 //startActivity(intent);
                 break;
+            case android.R.id.home:
+                NavUtils.navigateUpTo(this, getIntent());
+                finish();
+                return true;
         }
+
         return super.onOptionsItemSelected(item);
     }
 }

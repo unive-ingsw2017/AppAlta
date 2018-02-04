@@ -289,7 +289,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     }
                 else
                     try {
-                        final Intent intent = new Intent(getApplicationContext(), ListActivity.class);
+                        final Intent intent = new Intent(getApplicationContext(), StartActivity.class);
                         intent.putExtra("inserted_citta", arg0.getSnippet());
                         Log.d("MapsActivity premuto", arg0.getTitle());
                         startActivity(intent);

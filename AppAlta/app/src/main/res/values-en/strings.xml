@@ -8,7 +8,7 @@
     <string name="action_view">View Contracts</string>
     <string name="action_delete">Delete Markers</string>
     <string name="action_list">View contract list</string>
-    <string name="searh_location">Search</string>
+    <string name="searh">Search</string>
     <string name="confirm">Confirm</string>
     <string name="cancel">Cancel</string>
     <string name="confirm2">Are you Sure?</string>
@@ -76,4 +76,8 @@
     <string name="search_list">Filter</string>
     <string name="action_stats">Stats</string>
     <string name="confirm_download">Confirm data download</string>
+    <string name="start">Start</string>
+    <string name="welcome">Welcome in Appalta!</string>
+    <string name="presentationTitle2">How to use it?</string>
+    <string name="searh_location">Search contract</string>
 </resources>

@@ -1,45 +1,55 @@
 package com.progetto.ingegneria.appalta.Activities;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.Toast;
 
 import com.progetto.ingegneria.appalta.R;
 import com.progetto.ingegneria.appalta.Threads.DataSaver;
 
 import java.io.File;
 
-public class InitActivity extends Activity {
+public class InitActivity extends AppCompatActivity {
 
     DataSaver saver;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_init);
+        Button start = (Button) findViewById(R.id.start);
+
+        start.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try{
+                    Intent intent = new Intent(InitActivity.this,StartActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
+                catch(Exception e){
+                    Log.e("Init: onClick", e.getMessage());
+                    final Toast toast = Toast.makeText(getApplicationContext(),"Error",Toast.LENGTH_LONG);
+                    toast.show();
+                }
+            }
+        });
         try{
             File file = getApplicationContext().getFileStreamPath("appalti_file.txt");
             if(!file.exists()){
                 saver = new DataSaver(InitActivity.this, getApplicationContext(), true);
                 saver.execute();
-                while(saver.getStatus() == AsyncTask.Status.RUNNING)
-                    wait();
-            }
-            else{
-                String value=null;
-                //long Filesize=getFolderSize(file);    //servirà per vedere se ci sono cambiamenti sui file
             }
         }
         catch(Exception e){
             Log.e("Init:", e.getMessage());
         }
-        finally{
-            Intent intent = new Intent(InitActivity.this,StartActivity.class);
-            startActivity(intent);
-        }
+
     }
 
     public static long getFolderSize(File f) {  //return bytes
@@ -54,12 +64,6 @@ public class InitActivity extends Activity {
         return size;
     }
 
-    @Override
-    protected void onPause() {
-        // TODO Auto-generated method stub
-        super.onPause();
-        finish();
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -73,6 +77,9 @@ public class InitActivity extends Activity {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
+        switch (item.getItemId()) {
+            default: break;
+        }
 
         return super.onOptionsItemSelected(item);
     }

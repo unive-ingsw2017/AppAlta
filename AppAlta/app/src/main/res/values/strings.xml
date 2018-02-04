@@ -14,7 +14,8 @@
     <string name="action_stats">Statistiche</string>
     <string name="action_optionsettings">Opzioni</string>
 
-    <string name="searh_location">Cerca</string>
+    <string name="searh">Cerca</string>
+    <string name="searh_location">Cerca appalto per titolo</string>
     <string name="confirm">Conferma</string>
     <string name="confirm_download">Conferma lo scaricamento dei dati</string>
     <string name="cancel">Annulla</string>
@@ -53,10 +54,10 @@
     <!-- Filter List-->
     <string name="title_activity_list">Lista Appalti</string>
     <string name="filter_citta">Filtra per città</string>
-    <string name="filter_titolo">Filtra per titolo</string>
+    <string name="filter_titolo">Filtra per titolo dell\'appalto</string>
     <string name="filter_cig">Filtra per cig</string>
     <string name="filter_type">Filtra per tipo</string>
-    <string name="filter_cod_iva">Filtra per codice fiscale/iva</string>
+    <string name="filter_cod_iva">Filtra per codice fiscale/P.IVA azienda</string>
     <string name="filter_delete">Elimina filtro</string>
     <string name="filter_deleted">Filtro rimosso</string>
     <string name="filter_search">Cerca negli appalti</string>
@@ -65,7 +66,7 @@
     <string name="filter_anno">Filtra per anno</string>
     <string name="filter_max">Importo massimo</string>
     <string name="filter_min">Importo minimo</string>
-    <string name="filter_company">Filtra per azienda</string>
+    <string name="filter_company">Filtra per nome dell\'azienda</string>
 
     <!-- Insert List -->
     <string name="insert_company">Inserisci un\'azienda da cercare</string>
@@ -100,6 +101,17 @@
     <string name="MAP_TYPE_SATELLITE">Satellite</string>
     <string name="MAP_TYPE_TERRAIN">Terreno</string>
     <string name="title_activity_stats" translatable="false">StatsActivity</string>
+    <string name="start">Inizia</string>
+    <string name="welcome">Benvenuto in Appalta!</string>
+    <string name="presentationTitle1" translatable="false">Cosa può fare questa applicazione?</string>
+    <string name="presentation1" translatable="false">Appalta nasce con l\'idea di visualizzare su lista e su mappa, in modo trasparente, le informazioni riguardo le ditte che gareggiano per i vari appalti pubblici.</string>
+    <string name="presentation2" translatable="false">Sarà inoltre possibile applicare numerosi filtri per una più comoda ricerca degli appalti o delle aziende interessate.</string>
+    <string name="presentationTitle2">Come si usa?</string>
+    <string name="presentation3" translatable="false">L\'utilizzo è semplice! la schermata iniziale consiste in una lista di filtri intuitiva, ti basterà compliare o selezionare i campi desiderati e premere il pulsante cerca!</string>
+    <string name="presentation4" translatable="false">E\' inoltre presente in basso a destra un pulsante per passare velocemente tra la mappa e la lista.</string>
+    <string name="presentation5" translatable="false">Nella mappa verranno visualizzati dei marker ovunque siano presenti degli appalti, ma è possibile anche cercarli tramite l\'apposita barra in alto.</string>
+    <string name="presentation6" translatable="false">Sono inoltre disponibii delle ulteriori opzioni per personalizzare la mappa in alto a destra.</string>
+
 
 
 </resources>
